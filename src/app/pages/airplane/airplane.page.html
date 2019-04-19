@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Airplanes
+    </ion-title>
+  </ion-toolbar>
+  <ion-segment [(ngModel)]="airliner" > 
+    <ion-segment-button *ngFor="let item of listAirliners()" value="{{item}}">
+        {{item}}
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content class="outer-content">
+    <div [ngSwitch]="airliner">
+      <ng-container *ngFor="let item of listAirliners()">
+          <ion-list  ngDefaultControl *ngSwitchCase="item" (ionChange)="onChangeHandler($event)">
+            <ion-radio-group  [(ngModel)]="model">
+                <ion-item *ngFor="let airplane of listAirplanes(item)">
+                    <ion-label  style="flex:none !important;margin-right: 25px !important;">
+                      <ion-thumbnail>
+                          <img src="{{airplane.icon}}" alt="{{airplane.icon}}">
+                      </ion-thumbnail>
+                    </ion-label>
+                    <ion-label style="flex:none !important;min-width: 160px;">
+                      {{airplane.name}}
+                    </ion-label>
+                    <ion-label >
+                      <ion-radio value="{{airplane.id}}" checked></ion-radio>
+                    </ion-label>
+                </ion-item>
+            </ion-radio-group>
+          </ion-list>
+      </ng-container>    
+    </div>  
+  </ion-content>
