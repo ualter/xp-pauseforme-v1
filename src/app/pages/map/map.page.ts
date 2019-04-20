@@ -239,6 +239,10 @@ export class MapPage implements OnInit {
         // If were DISCONNECTED before, then now should be prepared in CONNECTED mode
         if ( !this.isConnectedWithXPlane && this.connectMeState ) {
           this.changeStateToConnected();
+
+          // Load last saved flightPlan
+          console.log(this.dataService.settings.flightPlan.flightPlan);
+          this.updateFlightPlan(this.dataService.settings.flightPlan.flightPlan);
         }
 
         if ( this.utils.isJsonMessage(message) ) {
@@ -321,6 +325,10 @@ export class MapPage implements OnInit {
   }
 
   onMessageFlightPlan(json) {
+    // save the FlightPlan locally
+    this.dataService.changeFlightPlan(json);
+    this.dataService.saveSettings();
+    // Update it at screen
     this.updateFlightPlan(json.flightPlan);
   }
 

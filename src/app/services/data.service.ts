@@ -14,11 +14,11 @@ export class DataService {
     currentSettings: Observable<Settings>
 
     constructor(private storage: Storage, private utils: UtilsService) {
-        this.settings                 = new Settings();
-        this.settings.xplaneAddress   = '127.0.0.1';
-        this.settings.xplanePort      = '9002';
-        this.settings.name            = 'UALTER Desktop';
-        this.settings.airplaneId      = 'a320';
+        this.settings                    = new Settings();
+        this.settings.xplaneAddress      = '127.0.0.1';
+        this.settings.xplanePort         = '9002';
+        this.settings.name               = 'UALTER Desktop';
+        this.settings.airplaneId         = 'a320';
 
         this.settingsSource = new BehaviorSubject<Settings>(this.settings);
         this.currentSettings = this.settingsSource.asObservable();
@@ -48,6 +48,10 @@ export class DataService {
 
     changeSettingsAirplane(airplaneId:string) {
         this.settings.airplaneId = airplaneId;
+    }
+
+    changeFlightPlan(flightPlan:string) {
+        this.settings.flightPlan = flightPlan;
     }
 
     notifyChangeSettingsToSubscribers() {

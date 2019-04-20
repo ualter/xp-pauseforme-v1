@@ -6,5 +6,6 @@ export class Settings {
     xplanePort: string;
     name: string;
     airplaneId: string;
+    flightPlan: string;
 
 }
