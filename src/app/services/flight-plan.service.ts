@@ -502,9 +502,12 @@ createNextDestinationMarker(navaid, iconSize) {
     let marker        = leaflet.marker([navaid.latitude,navaid.longitude], {icon: icon});
     let htmlPopup     = this.createPopUp(navaid);
     let markerPopUp   = marker.bindPopup(htmlPopup);
-    let markerTooltip = this.createTooltip(navaid);
     markerPopUp.setLatLng([navaid.latitude,navaid.longitude]);
-    marker.bindTooltip(markerTooltip,{opacity:0.85}).openTooltip();
+    if ( !this.utils.isAppPlatform() ) { // Not on Mobile/Tablet?
+      // Do it only for browser platform (mouseover doesn't make sense on "Touchable" platforms, there's no mouse :-P )
+      let markerTooltip = this.createTooltip(navaid);
+      marker.bindTooltip(markerTooltip,{opacity:0.85}).openTooltip();
+    }
     return marker;
 }
 createNextDestinationCircle(navaid, zoom) {
@@ -568,6 +571,12 @@ createPopUp(navaid) {
     let fontSizeLabel  = 12;
     let fontSizeValue  = 12;
     let fontSizeUnit   = 11;
+    let fontFamily     = 'font-family:Consolas';
+
+    if ( this.utils.isAppPlatform() ) {
+      // No change for font family when on Mobile/Tablet
+      fontFamily     = 'font-family:Courier';
+    }
 
     let distance;
     if ( this.airplaneData ) {
@@ -582,7 +591,7 @@ createPopUp(navaid) {
     let idCell = `
     <tr>
         <td>
-          <span style="font-size:` + fontSizeLabel + `px;font-family:Consolas">ID.......:</span>
+          <span style="font-size:` + fontSizeLabel + `px;` + fontFamily + `">ID.......:</span>
         </td>
         <td align="right" style="padding-right:` + paddingValue + `px;">
           <span style="font-size:` + fontSizeValue + `px;color:blue;font-weight:bold;">` + navaid.id + `</span>
@@ -605,7 +614,7 @@ createPopUp(navaid) {
       ` + idCell + `
       <tr>
         <td>
-          <span style="font-size:` + fontSizeLabel + `px;font-family:Consolas">Distance.:</span>
+          <span style="font-size:` + fontSizeLabel + `px;` + fontFamily + `">Distance.:</span>
         </td>
         <td align="right" style="padding-right:` + paddingValue + `px;">
           <span id="distance` + navaid.id + `" style="font-size:` + fontSizeValue + `px;color:blue;font-weight:bold;">` + distance + `</span>
@@ -616,7 +625,7 @@ createPopUp(navaid) {
       </tr>
       <tr>
         <td>
-          <span style="font-size:` + fontSizeLabel + `px;font-family:Consolas">Navaid...:</span>
+          <span style="font-size:` + fontSizeLabel + `px;` + fontFamily + `">Navaid...:</span>
         </td>
         <td align="right" style="padding-right:` + paddingValue + `px;">
           <span style="font-size:` + fontSizeValue + `px;color:blue;font-weight:bold;">` + navaid.type + `</span>
@@ -627,7 +636,7 @@ createPopUp(navaid) {
       </tr>
       <tr>
         <td>
-          <span style="font-size:` + fontSizeLabel + `px;font-family:Consolas">Latitude.:</span>&nbsp;&nbsp;
+          <span style="font-size:` + fontSizeLabel + `px;` + fontFamily + `">Latitude.:</span>&nbsp;&nbsp;
         </td>
         <td align="right" style="padding-right:` + paddingValue + `px;">
           <span style="font-size:` + fontSizeValue + `px;color:blue;font-weight:bold;">` + navaid.latitude + `</span>
@@ -638,7 +647,7 @@ createPopUp(navaid) {
       </tr>
       <tr>
         <td>
-          <span style="font-size:` + fontSizeLabel + `px;font-family:Consolas">Longitude:</span>&nbsp;&nbsp;
+          <span style="font-size:` + fontSizeLabel + `px;` + fontFamily + `">Longitude:</span>&nbsp;&nbsp;
         </td>
         <td align="right" style="padding-right:` + paddingValue + `px;">
           <span style="font-size:` + fontSizeValue + `px;color:blue;font-weight:bold;">` + navaid.longitude + `</span>
@@ -671,6 +680,7 @@ createPopUp(navaid) {
     var buttonPauseName        = 'btnPause' + navaid.id;
 
     //containerBtn.setAttribute('style','margin-left:-1px;');
+    containerBtn.setAttribute('style','width:198px;');
 
     separator.setAttribute("style","line-height:5px;");
     tableBtn.setAttribute("width", "100%");
@@ -678,14 +688,14 @@ createPopUp(navaid) {
     tableBtnTdBtnBtnMoreNm.setAttribute("align", "left");
     tableBtnTdBtnPause.setAttribute("align", "center");
 
-    var btnLessNm = leaflet.DomUtil.create('button', '', containerBtn);
+    var btnLessNm = leaflet.DomUtil.create('ion-button', '', containerBtn);
     btnLessNm.setAttribute('type', 'button');
-    btnLessNm.setAttribute('class', 'buttonPopup buttonPopupMoreLess');
+    //btnLessNm.setAttribute('class', 'buttonPopup buttonPopupMoreLess');
     btnLessNm.innerHTML = ' &#8722; ';
 
-    var btnMoreNm = leaflet.DomUtil.create('button', '', containerBtn);
+    var btnMoreNm = leaflet.DomUtil.create('ion-button', '', containerBtn);
     btnMoreNm.setAttribute('type', 'button');
-    btnMoreNm.setAttribute('class', 'buttonPopup buttonPopupMoreLess');
+    //btnMoreNm.setAttribute('class', 'buttonPopup buttonPopupMoreLess');
     btnMoreNm.innerHTML = ' &#43; ';
 
     var initDist = 10;
@@ -693,9 +703,9 @@ createPopUp(navaid) {
       initDist = Number.parseInt(document.getElementById(buttonPauseName).getAttribute('nm'));
     }
 
-    var btnPauseHere = leaflet.DomUtil.create('button', '', containerBtn);
+    var btnPauseHere = leaflet.DomUtil.create('ion-button', '', containerBtn);
     btnPauseHere.setAttribute('type', 'button');
-    btnPauseHere.setAttribute('class', 'buttonPopup buttonPopupPause');
+    //btnPauseHere.setAttribute('class', 'buttonPopup buttonPopupPause');
     btnPauseHere.setAttribute('id',buttonPauseName);
     btnPauseHere.setAttribute('nm',''+initDist);
     btnPauseHere.innerHTML = pauseAscii + ' ' + this.utils.pad(initDist, 3) +'nm';
