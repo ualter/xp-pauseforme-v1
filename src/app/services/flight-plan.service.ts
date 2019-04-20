@@ -710,9 +710,26 @@ createPopUp(navaid) {
     btnPauseHere.setAttribute('nm',''+initDist);
     btnPauseHere.innerHTML = pauseAscii + ' ' + this.utils.pad(initDist, 3) +'nm';
 
+    // ion-fab
+    var containerIonFab = leaflet.DomUtil.create('ion-fab', '', containerBtn); 
+    containerIonFab.setAttribute('vertical','bottom');
+    containerIonFab.setAttribute('horizontal','end');
+    containerIonFab.setAttribute('slot','fixed');
+    this.createIonFabButton(containerBtn, containerIonFab, 'pin' );
+    var ionFabListTop = leaflet.DomUtil.create('ion-fab-list', '', containerBtn); 
+    ionFabListTop.setAttribute('side','top');
+    var btnIncrDist = this.createIonFabButton(containerBtn, ionFabListTop, 'arrow-dropup-circle' );
+    var ionFabListBottom = leaflet.DomUtil.create('ion-fab-list', '', containerBtn); 
+    ionFabListBottom.setAttribute('side','bottom');
+    var btnDecrDist = this.createIonFabButton(containerBtn, ionFabListBottom, 'arrow-dropdown-circle' );
+    containerIonFab.appendChild(ionFabListTop);
+    containerIonFab.appendChild(ionFabListBottom);
+
+    
     tableBtnTdBtnBtnLessNm.appendChild(btnLessNm);
     tableBtnTdBtnBtnMoreNm.appendChild(btnMoreNm);
     tableBtnTdBtnPause.appendChild(btnPauseHere);
+    tableBtnTdBtnPause.appendChild(containerIonFab);
     tableBtnTr1.appendChild(tableBtnTdBtnBtnLessNm);
     tableBtnTr1.appendChild(tableBtnTdBtnPause);
     tableBtnTr1.appendChild(tableBtnTdBtnBtnMoreNm);
@@ -747,9 +764,36 @@ createPopUp(navaid) {
       var msg         = "{PAUSE}|" + navaid.id + "|" + navaid.type + "|" + dist;
       MapPage.sendMessageToXPlane(msg, identification);
     });
+
+    leaflet.DomEvent.on(btnDecrDist, 'click', (e: any) => {
+      this.lessDistancePause(navaid, pauseAscii);
+      e.stopPropagation();
+    });
+    leaflet.DomEvent.on(btnDecrDist, 'dblclick', (e: any) => {
+      this.lessDistancePause(navaid, pauseAscii, 35);
+      e.stopPropagation();
+    });
+    leaflet.DomEvent.on(btnIncrDist, 'click', (e: any) => {
+      this.moreDistancePause(navaid, pauseAscii);
+      e.stopPropagation();
+    });
+    leaflet.DomEvent.on(btnIncrDist, 'dblclick', (e: any) => {
+      this.moreDistancePause(navaid, pauseAscii, 35);
+      e.stopPropagation();
+    });
+
     return containerBtn;
   }
 
+  private createIonFabButton(container, parent, icon) {
+    var btnIonFabButton     = leaflet.DomUtil.create('ion-fab-button', '', container); 
+    var btnIonFabButtonIcon = leaflet.DomUtil.create('ion-icon', '', container); 
+    btnIonFabButtonIcon.setAttribute('name',icon);
+    btnIonFabButtonIcon.setAttribute('mode','ios');
+    btnIonFabButton.appendChild(btnIonFabButtonIcon);
+    parent.appendChild(btnIonFabButton);
+    return btnIonFabButton;
+  }
 
   private moreDistancePause(navaid: any, pauseAscii: string, amount? : number) {
       if ( !amount || amount == 0 ) {
