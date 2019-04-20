@@ -241,8 +241,9 @@ export class MapPage implements OnInit {
           this.changeStateToConnected();
 
           // Load last saved flightPlan
-          console.log(this.dataService.settings.flightPlan.flightPlan);
-          this.updateFlightPlan(this.dataService.settings.flightPlan.flightPlan);
+          if (this.dataService.settings.flightPlan) {
+            this.updateFlightPlan(this.dataService.settings.flightPlan);
+          }
         }
 
         if ( this.utils.isJsonMessage(message) ) {
@@ -326,7 +327,7 @@ export class MapPage implements OnInit {
 
   onMessageFlightPlan(json) {
     // save the FlightPlan locally
-    this.dataService.changeFlightPlan(json);
+    this.dataService.changeFlightPlan(json.flightPlan);
     this.dataService.saveSettings();
     // Update it at screen
     this.updateFlightPlan(json.flightPlan);

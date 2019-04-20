@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { Settings } from './Settings'
+import { Settings, IFlightPlan } from './Settings'
 import { Storage } from '@ionic/storage';
 import { UtilsService } from "./utils.service";
 
@@ -50,7 +50,7 @@ export class DataService {
         this.settings.airplaneId = airplaneId;
     }
 
-    changeFlightPlan(flightPlan:string) {
+    changeFlightPlan(flightPlan:IFlightPlan) {
         this.settings.flightPlan = flightPlan;
     }
 
