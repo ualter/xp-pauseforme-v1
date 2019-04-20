@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button mode="ios"></ion-menu-button>
     </ion-buttons>
     <ion-title>
       MapPauseForMe
@@ -23,10 +23,16 @@
       <div class="showOnMap" id="connectingGif" [@visibilityContacting]="visibilityContacting">
         <img src="assets/imgs/loading-1.gif" alt="loading"/>
       </div>
-      <ion-item  id="buttonConnect" [@visibilityButtonConnectMe]="visibilityButtonConnectMe"  >
-        <ion-label>Connect Me</ion-label>
-        <ion-toggle [(ngModel)]="connectMeState" (ngModelChange)="updateConnectMeState($event)" (click)="stopPropagate($event)" [disabled]="connectMeDisable"></ion-toggle>
-      </ion-item>
+      <div id="buttonConnect" [@visibilityButtonConnectMe]="visibilityButtonConnectMe"  >
+        <div style="height: 100%; width: 100%; text-align: center; display: table">
+          <span style="vertical-align: middle;display: table-cell; padding-left: 15px; padding-top: 2px;">
+            Connect Me
+          </span> 
+          <span style="vertical-align: middle;display: table-cell; padding-top: 8px; padding-right: 15px;">  
+            <ion-toggle mode="ios" [(ngModel)]="connectMeState" (ngModelChange)="updateConnectMeState($event)" (click)="stopPropagate($event)" [disabled]="connectMeDisable"></ion-toggle>
+          </span>
+        </div>
+      </div>
       <div id="messageBar" [@visibilityMessageBar]="visibilityMessageBar" [@colorChanged]="messageBarColor">
         <div id="messageBarText">
           <ion-icon [name]="messageBarIcon" [color]="messageBarColorIcon"></ion-icon>

@@ -1,5 +1,7 @@
 {
   "name": "xp-pauseforme-v2",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

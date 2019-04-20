@@ -670,6 +670,8 @@ createPopUp(navaid) {
     var tableBtnTdBtnPause     = leaflet.DomUtil.create('td');
     var buttonPauseName        = 'btnPause' + navaid.id;
 
+    //containerBtn.setAttribute('style','margin-left:-1px;');
+
     separator.setAttribute("style","line-height:5px;");
     tableBtn.setAttribute("width", "100%");
     tableBtnTdBtnBtnLessNm.setAttribute("align", "right");
@@ -693,7 +695,7 @@ createPopUp(navaid) {
 
     var btnPauseHere = leaflet.DomUtil.create('button', '', containerBtn);
     btnPauseHere.setAttribute('type', 'button');
-    btnPauseHere.setAttribute('class', 'buttonPopup');
+    btnPauseHere.setAttribute('class', 'buttonPopup buttonPopupPause');
     btnPauseHere.setAttribute('id',buttonPauseName);
     btnPauseHere.setAttribute('nm',''+initDist);
     btnPauseHere.innerHTML = pauseAscii + ' ' + this.utils.pad(initDist, 3) +'nm';

@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { AlertController, NavController, NavParams, ToastController } from '@ionic/angular';
+import { AlertController, NavController, ToastController } from '@ionic/angular';
 import * as $ from "jquery";
 import leaflet from 'leaflet';
 import { AviationService } from '../../services/aviation.service';
@@ -170,6 +170,10 @@ export class MapPage implements OnInit {
     public router: RouterService,
     public flightPlan: FlightPlanService) {
 
+      staticXPlaneWsServer  = xpWsSocket;
+      staticAlertController = alertCtrl;
+      MapPage.myself = this;
+
       this.dataService.currentSettings.subscribe(settings => {
         this.xplaneAddress = settings.xplaneAddress;
         this.xplanePort    = settings.xplanePort;
@@ -202,26 +206,27 @@ export class MapPage implements OnInit {
         AIRPLANE_ICON.options.shadowUrl = airplane.icon_shadow;
         if ( airplaneMarker )  {
              airplaneMarker.setIcon(AIRPLANE_ICON);
-             //this.checkZoomLevelChangesOnMap(true);
+             this.checkZoomLevelChangesOnMap(true);
         }
       });
   }
 
   ngOnInit() {
-    console.log("onInit - Maps");
     this.loadMap();
-    this.positionMapWithUserLocation();
+    this.getSetUserPosition();
   }
 
   ngAfterViewInit(){
     $(document).ready(function(){
       //console.log('JQuery is working!!');
     });
+    setTimeout(function () {
+      map.invalidateSize(ZOOM_PAN_OPTIONS);
+    }, 0);
   }
 
   ionViewDidEnter() {
-    this.loadMap();
-    //this.positionMapWithUserLocation();
+    map.invalidateSize(ZOOM_PAN_OPTIONS);
   }
 
   onMessageReceived(payload) {
@@ -269,14 +274,22 @@ export class MapPage implements OnInit {
         } else {
           msg = "[ Paused at " + this.utils.formattedHour() + " ] Reason ►► " + json.message + " by X-Plane";
         }
-        toastPresented = this.toastCtrl.create({
+        this.presentTost({
+            header:"Header",
             message: msg,
             position: 'top',
             showCloseButton: true,
-            closeButtonText: 'OK'
+            closeButtonText: 'OK',
+            mode: "md",
+            animated: "true",
+            keyboardClose: "true",
+            translucent: "true"
         });
-        toastPresented.present();
     }
+  }
+  async presentTost(toastMessage) {
+    const toast = await this.toastCtrl.create(toastMessage);
+    toast.present();
   }
   dismissToastPauseReason() {
     if ( toastPresented ) {
@@ -332,9 +345,19 @@ export class MapPage implements OnInit {
   }
   updateAirplanePosition(airplaneData, bearing) {
     this.utils.trace("Airplane new position (Lat/Lng): " + airplaneData.lat + ":" + airplaneData.lng);
-    var newLatLng = new leaflet.LatLng(airplaneData.lat,airplaneData.lng);
+
+    var _lat = airplaneData.lat;
+    if ( isNaN(parseFloat(_lat)) ) {
+      _lat = 0;
+    }
+    var _lng = airplaneData.lng;
+    if ( isNaN(parseFloat(_lng)) ) {
+      _lng = 0;
+    }
+
+    var newLatLng = new leaflet.LatLng(_lat,_lng);
     if (!airplaneMarker) {
-      this.createAirplaneMarker(airplaneData.lat,airplaneData.lng);
+      this.createAirplaneMarker(_lat,_lng);
     }
     airplaneMarker.setLatLng(newLatLng);
     airplanePopup.setLatLng(newLatLng);
@@ -363,8 +386,8 @@ export class MapPage implements OnInit {
       map.panTo(newLatLng);
     }
 
-    latitude  = airplaneData.lat;
-    longitude = airplaneData.lng;
+    latitude  = _lat;
+    longitude = _lng;
   }
 
   adaptAngleForIcon(angle) {
@@ -398,6 +421,13 @@ export class MapPage implements OnInit {
 
 
   createAirplaneMarker(_latitude, _longitude) {
+    if ( isNaN(parseFloat(_latitude)) ) {
+      _latitude = 0;
+    }
+    if ( isNaN(parseFloat(_longitude)) ) {
+      _longitude = 0;
+    }
+
     this.utils.trace("Adding airplaned to " + _latitude + ":" + _longitude);
     airplaneMarker = leaflet.marker([_latitude, _latitude], {icon: AIRPLANE_ICON}).addTo(map);
     leaflet.DomUtil.addClass(airplaneMarker._icon,'aviationClass');
@@ -419,20 +449,21 @@ export class MapPage implements OnInit {
     observer.observe(airplaneMarkerTarget, { attributes : true, attributeFilter : ['style'] });
   }
 
-  positionMapWithUserLocation() {
+  getSetUserPosition() {
     this.geolocation.getCurrentPosition().then((resp) => {
       if (resp) {
         userLatitude  = resp.coords.latitude;
         userLongitude = resp.coords.longitude;
         this.utils.info("LatLng User Location: " + userLatitude + ":" + userLongitude);
         var latLng = leaflet.latLng(userLatitude, userLongitude);
-        //userMarker = leaflet.marker([userLatitude, userLongitude]).addTo(map);
-        map.flyTo(latLng, MAX_ZOOM - 4, ZOOM_PAN_OPTIONS);
+        userMarker = leaflet.marker(latLng).addTo(map);
+        map.flyTo({userLatitude:userLongitude}, MAX_ZOOM - 2, ZOOM_PAN_OPTIONS);
       }      
     }).catch((error) => {
        this.utils.error('Error getting location: ' + error.message);
     });
 
+    // In case he/she moves, let's get the new localization
     let watch = this.geolocation.watchPosition();
     watch.subscribe((data) => {
 
@@ -445,7 +476,7 @@ export class MapPage implements OnInit {
         userLatitude  = data.coords.latitude;
         userLongitude = data.coords.longitude;
 
-        if ( userMarker ) {
+        if ( userMarker && !isNaN(parseFloat(userLatitude)) && !isNaN(parseFloat(userLongitude))) {
           var newLatLng = new leaflet.LatLng(userLatitude,userLongitude);
           userMarker.setLatLng(newLatLng);
         }
@@ -454,13 +485,13 @@ export class MapPage implements OnInit {
   }
 
   loadMap() {
-    console.log("loadMap");
     map = leaflet.map("map", {
           layers: [standardTile], 
           minZoom: 3,
+          maxZoom: MAX_ZOOM,
           zoomControl:false
         }
-    ).setView([41.5497, 2.0989], MAX_ZOOM);
+    ).setView([41.5497, 2.0989], MAX_ZOOM - 5);
     map.addControl(this.createGoToLocationButton());
     map.addControl(this.createFollowAirplaneButton());
     map.addControl(this.createPlayPauseButton());
@@ -501,7 +532,9 @@ export class MapPage implements OnInit {
 
     if ( followAirplane && map && leaflet ) {
       try {
-        map.panTo(leaflet.latLng(latitude,longitude));
+        if ( !isNaN(parseFloat(latitude)) &&  !isNaN(parseFloat(longitude)) ) {
+          map.panTo(leaflet.latLng(latitude,longitude));
+        }
       } catch (error) {
         MapPage.myself.utils.error(error);
       }
@@ -741,6 +774,11 @@ export class MapPage implements OnInit {
     return new playPauseButtonControl();
   }
 
+  static async  presentAlert(msgAlert) {
+    const alert = await staticAlertController.create(msgAlert);
+    await alert.present(); 
+  }
+
   createDisconnectButton() {
     var playPauseButtonControl = leaflet.Control.extend({
       options: {
@@ -758,8 +796,12 @@ export class MapPage implements OnInit {
           container.appendChild(iconDisconnect);
 
           container.onclick = function(e: any) {
-            let alert = staticAlertController.create({
-            title: 'Warning',
+            MapPage.presentAlert({
+            header: 'Warning',
+            subHeader: 'X-Plane Connection',
+            mode:'ios',
+            animated: 'true',
+            translucent: ' true',
             message: `
               Are you sure want disconnect from X-Plane?
             `,
@@ -778,7 +820,6 @@ export class MapPage implements OnInit {
               }
             ]
             });
-            alert.present();
             e.stopPropagation();
           }
           
@@ -793,26 +834,29 @@ export class MapPage implements OnInit {
     if ( !staticXPlaneWsServer                || 
          !staticXPlaneWsServer.getWebSocket() || 
           staticXPlaneWsServer.getWebSocket().readyState != WS_OPEN ) {
-          let alert = staticAlertController.create({
-          title: 'Warning',
-          subTitle: 'Not connected, contact X-Plane right now?',
-          buttons: [
-            {
-              text: 'Forget it',
-              role: 'cancel',
-              handler: () => {
+          MapPage.presentAlert({
+            header: 'Warning',
+            subHeader: 'X-Plane Connection',
+            mode:'ios',
+            animated: 'true',
+            translucent: ' true',
+            message: 'Not connected, contact X-Plane right now?',
+            buttons: [
+              {
+                text: 'Forget it',
+                role: 'cancel',
+                handler: () => {
+                }
+              },
+              {
+                text: 'Connect Me Now',
+                handler: (e: any) => {
+                  MapPage.myself.switchConnectMeState();
+                  //e.stopPropagation();
+                }
               }
-            },
-            {
-              text: 'Connect Me Now',
-              handler: (e: any) => {
-                MapPage.myself.switchConnectMeState();
-                e.stopPropagation();
-              }
-            }
-          ]
+            ]
         });
-        alert.present();
     } else {
         let finalMessage = message + "," + identity;
         MapPage.myself.utils.info("Sent \"" + finalMessage + "\" message to X-Plane");

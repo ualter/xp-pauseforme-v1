@@ -14,18 +14,17 @@ export class DataService {
     currentSettings: Observable<Settings>
 
     constructor(private storage: Storage, private utils: UtilsService) {
-
-        console.log("jfklds");
         this.settings                 = new Settings();
-        this.settings.xplaneAddress   = "127.0.0.1";
-        this.settings.xplanePort      = "9002";
-        this.settings.name            = "UALTER Desktop";
-        this.settings.airplaneId      = "a320";
+        this.settings.xplaneAddress   = '127.0.0.1';
+        this.settings.xplanePort      = '9002';
+        this.settings.name            = 'UALTER Desktop';
+        this.settings.airplaneId      = 'a320';
 
         this.settingsSource = new BehaviorSubject<Settings>(this.settings);
         this.currentSettings = this.settingsSource.asObservable();
 
-        // Asynchronously check database if there is already an object saved before, if found... notify the subscribers again with the new value
+        // Asynchronously check database if there is already an object saved before, 
+        // if found... notify the subscribers again with the new value
         this.storage.get('settings').then((vlr) => {
             if (vlr) {
                 this.utils.trace("Load settings data from LocalStorage:" + vlr);                

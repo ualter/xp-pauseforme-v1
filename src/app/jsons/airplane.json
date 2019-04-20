@@ -1,0 +1,64 @@
+{
+    "airplane":{
+       "lat":40.4552,
+       "lng":-3.5703,
+       "airspeed":0,
+       "trueAirspeed":0,
+       "currentAltitude":2010,
+       "currentAltitude2":-25365,
+       "vsFpm":0,
+       "groundspeed":133,
+       "currentFreqNav1":10930,
+       "currentDistDmeNav1":0,
+       "currentTimeDmeNav1":0,
+       "currentFreqNav2":0,
+       "currentTimeDmeNav2":0,
+       "currentDistDmeNav2":0,
+       "currentGPSDistDme":261,
+       "currentGPSTimeDme":0,
+       "destination":"Not Found: NOT FOUND  (NTFND)",
+       "heading":133,
+       "autopilot":{
+          "on":0,
+          "heading":359,
+          "altitude":10000,
+          "vsFpm":0,
+          "vsStatus":0,
+          "airspeed":200
+       },
+       "pauseforme":{
+          "navaid":{
+             "userAirportDistance":30,
+             "userVORDistance":80,
+             "userNDBDistance":1625,
+             "userFixDistance":243,
+             "userDMEDistance":2
+          }
+       },
+       "nextDestination":{
+          "gps":{
+             "id":"NTFND",
+             "name":"NOT FOUND",
+             "latitude":0,
+             "longitude":3.02407e-11,
+             "dmeDistance":261,
+             "dmeTime":0,
+             "distance":2437,
+             "type":"Not Found",
+             "status":1
+          },
+          "fms":{
+             "id":"MF",
+             "name":"YAKUTSK NDB",
+             "latitude":41.3093,
+             "longitude":2.09466,
+             "fmsTime":"99:99:99",
+             "distance":263,
+             "type":"Lat./Long.",
+             "status":1
+          }
+       }
+    },
+    "isPaused":0,
+    "isBatteryOn":1
+ }
