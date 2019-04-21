@@ -1,9 +1,9 @@
+import { XpWebSocketService } from './xp-websocket.service';
 import { Injectable } from "@angular/core";
 import { UtilsService } from "./utils.service";
 import { AviationService } from './aviation.service';
 import leaflet from 'leaflet';
 import { Subject } from 'rxjs'; 
-import { MapPage } from '../pages/map/map.page';
 
 var map;
 var identification;
@@ -150,11 +150,7 @@ var zoomIconSize3 = [7,7];
 var zoomIconSize4 = [6,6];
 var zoomIconSize5 = [5,5];
 
-/*
-var icon = centerMarker.options.icon;
-icon.options.iconSize = [newwidth, newheight];
-centerMarker.setIcon(icon);
-*/
+const WS_OPEN     = 1;
 
 @Injectable({
   providedIn: 'root'
@@ -166,7 +162,7 @@ export class FlightPlanService {
   airplaneLastLng     = 9999;
   flightPlanWaypoints = [];
   flightPlanObservable;
-
+  xpWsSocket: XpWebSocketService;
 
   constructor(public utils: UtilsService,
     public aviation: AviationService) {
@@ -187,6 +183,10 @@ export class FlightPlanService {
 setMap(_map, _identification) {
     map = _map;
     identification = _identification;
+}
+
+setXpWsSocket(_xpWsSocket) {
+  this.xpWsSocket = _xpWsSocket;
 }
 
 showFlightPlan(flightPlan, _airplaneData){
@@ -502,8 +502,9 @@ createNextDestinationMarker(navaid, iconSize) {
     let marker        = leaflet.marker([navaid.latitude,navaid.longitude], {icon: icon});
     let htmlPopup     = this.createPopUp(navaid);
     let markerPopUp   = marker.bindPopup(htmlPopup);
+
     markerPopUp.setLatLng([navaid.latitude,navaid.longitude]);
-    if ( !this.utils.isAppPlatform() ) { // Not on Mobile/Tablet?
+    if ( this.utils.isDesktop() ) { // Not on Mobile/Tablet?
       // Do it only for browser platform (mouseover doesn't make sense on "Touchable" platforms, there's no mouse :-P )
       let markerTooltip = this.createTooltip(navaid);
       marker.bindTooltip(markerTooltip,{opacity:0.85}).openTooltip();
@@ -553,9 +554,11 @@ createAirportMarker(navaid, iconSize) {
   let marker        = leaflet.marker([navaid.latitude,navaid.longitude], {icon: icon});
   let htmlPopup     = this.createPopUp(navaid);
   let markerPopUp   = marker.bindPopup(htmlPopup);
-  let markerTooltip = this.createTooltip(navaid);
   markerPopUp.setLatLng([navaid.latitude,navaid.longitude]);
-  marker.bindTooltip(markerTooltip,{opacity:0.85}).openTooltip();
+  if ( this.utils.isDesktop() ) {
+    let markerTooltip = this.createTooltip(navaid);
+    marker.bindTooltip(markerTooltip,{opacity:0.85}).openTooltip();
+  }
   return marker;
 }
 
@@ -573,7 +576,7 @@ createPopUp(navaid) {
     let fontSizeUnit   = 11;
     let fontFamily     = 'font-family:Consolas';
 
-    if ( this.utils.isAppPlatform() ) {
+    if ( this.utils.isOsOrAndroidPlatform() ) {
       // No change for font family when on Mobile/Tablet
       fontFamily     = 'font-family:Courier';
     }
@@ -660,7 +663,6 @@ createPopUp(navaid) {
     `;
 
     var containerBtn = this.createButtonPauseHere(navaid);
-
     var container = leaflet.DomUtil.create('div');
     container.innerHTML = html;
     container.appendChild(containerBtn);
@@ -745,7 +747,12 @@ createPopUp(navaid) {
       var buttonPause = document.getElementById(buttonPauseName);
       var dist        = buttonPause.getAttribute('nm');
       var msg         = "{PAUSE}|" + navaid.id + "|" + navaid.type + "|" + dist;
-      MapPage.sendMessageToXPlane(msg, identification);
+
+      if (  this.xpWsSocket.getWebSocket().readyState == WS_OPEN ) {
+          this.xpWsSocket.getWebSocket().send(msg);
+      } else {
+          console.log("NOT OPENED!");
+      }
     });
     return containerBtn;
   }

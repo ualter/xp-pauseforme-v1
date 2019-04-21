@@ -14,6 +14,7 @@ $ npm install leaflet --save
 $ npm install @angular/animations --save
 $ npm install @ionic-angular --save
 $ npm install @ionic-native/geolocation --save
+$ npm install leaflet-touch-helper --save
 ```
 #### Development Server
 ```shell

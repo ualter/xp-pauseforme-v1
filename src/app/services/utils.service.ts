@@ -1,3 +1,4 @@
+import { Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { Airplane } from './airplane';
 
@@ -31,21 +32,27 @@ export class UtilsService {
         "Nov", "Dec"
     ];
 
-    constructor() {
+    constructor(private platform: Platform) {
     }
 
     pad(num, size) {
         return ('000000000' + num).substr(-size); 
     }
 
-    /**
-     * Return if the Application is running under
-     * a Browser (Desktop) or an App (iOS, Android)
-     * (No practical and native solution found so far.)
-     * This is a workaround! (Shoud be tested already, through many situations!)
-     */
-    isAppPlatform() {
-        return (!document.URL.startsWith('http') || document.URL.startsWith('http://localhost:8080'));
+    isOsPlatform() {
+        return this.platform.is('ios');
+    }
+
+    isAndroidPlatform() {
+        return this.platform.is('android');
+    }
+    
+    isDesktop() {
+        return this.platform.is('desktop');
+    }
+
+    isOsOrAndroidPlatform() {
+        return this.isOsPlatform() || this.isAndroidPlatform();
     }
 
     formatDateToday() {

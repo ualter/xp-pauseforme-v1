@@ -11,6 +11,22 @@
 
 <ion-content  allow="geolocation">
     <div id="map" style="width: 100%;height: 100%;">
+      <div>
+        <ion-fab vertical="top" horizontal="start" slot="fixed">
+          <ion-fab-button>
+            <ion-icon name="speedometer"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-list side="end">
+            <ion-fab-button (click)="locateUser($event)"            id="btnLocateUser"><ion-icon name="navigate"></ion-icon></ion-fab-button>
+            <ion-fab-button (click)="followAirplane($event)"        id="btnFollowAirplane"><ion-icon name="airplane"></ion-icon></ion-fab-button>
+            <ion-fab-button (click)="showAirplaneInfoPopup($event)" id="btnShowAirplaneInfo"><ion-icon name="information-circle"></ion-icon></ion-fab-button>
+          </ion-fab-list>
+          <ion-fab-list side="bottom">
+            <ion-fab-button (click)="playPause($event)"        id="btnPlayPause"><ion-icon name="pause"></ion-icon></ion-fab-button>
+            <ion-fab-button (click)="disConnectButton($event)" id="btnDisconnect"><ion-icon name="power"></ion-icon></ion-fab-button>
+          </ion-fab-list>
+        </ion-fab>
+      </div>
       <div class="showOnMap" id="messageSending" [@visibilityWaiting]="visibilityWaiting"> 
         <img src="assets/imgs/loading-1.gif" alt="loading"/>
       </div>
