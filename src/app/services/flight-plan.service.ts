@@ -742,17 +742,17 @@ createPopUp(navaid) {
     });
 
     leaflet.DomEvent.on(btnPauseHere, 'click', (e: any) => {
-      e.stopPropagation();
+        e.stopPropagation();
+        var buttonPause = document.getElementById(buttonPauseName);
+        var dist        = buttonPause.getAttribute('nm');
+        var msg         = "{CONFIG_PAUSE_NAVAID}|" + navaid.id + "|" + navaid.type + "|" + dist;
 
-      var buttonPause = document.getElementById(buttonPauseName);
-      var dist        = buttonPause.getAttribute('nm');
-      var msg         = "{PAUSE}|" + navaid.id + "|" + navaid.type + "|" + dist;
-
-      if (  this.xpWsSocket.getWebSocket().readyState == WS_OPEN ) {
-          this.xpWsSocket.getWebSocket().send(msg);
-      } else {
-          console.log("NOT OPENED!");
-      }
+        if (  this.xpWsSocket.getWebSocket().readyState == WS_OPEN ) {
+            this.utils.info("Send command config to X-Plane: " + msg);
+            this.xpWsSocket.getWebSocket().send(msg);
+        } else {
+            console.log("NOT OPENED!");
+        }
     });
     return containerBtn;
   }

@@ -252,6 +252,7 @@ export class MapPage implements OnInit {
         }
 
         if ( this.utils.isJsonMessage(message) ) {
+            //console.log(message);
             var json = JSON.parse(message);
             this.utils.trace("JSON received: ",json);
 
