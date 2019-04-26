@@ -7,14 +7,17 @@ $ ionic cordova prepare
 $ ### Step necessary when running on DevApp (iPhone/iPad) otherwise the Maps will not be loaded correctly
 $ ionic plugin add cordova-plugin-whitelist 
 ```
-#### Plugins installed (when start the project from scratch, no need when package.json is already mounted)
+#### Plugins installed (when start the project from scratch, that's not needed to do when package.json is already mounted)
 ```shell
 $ npm install @ionic/storage --save
-$ npm install leaflet --save
+$ npm install leaflet --save   
 $ npm install @angular/animations --save
 $ npm install @ionic-angular --save
 $ npm install @ionic-native/geolocation --save
+$ ionic plugin add cordova-plugin-whitelist
 $ npm install leaflet-touch-helper --save
+$ ionic cordova plugin add cordova-plugin-local-notification
+$ npm install @ionic-native/local-notifications
 ```
 #### Development Server
 ```shell

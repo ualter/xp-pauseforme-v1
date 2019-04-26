@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, NavController, ToastController, Platform } from '@ionic/angular';
 import * as $ from "jquery";
 import leaflet from 'leaflet';
 import { AviationService } from '../../services/aviation.service';
@@ -11,6 +11,7 @@ import { XpWebSocketService } from '../../services/xp-websocket.service';
 import { RouterService } from '../../services/router.service';
 import { FlightPlanService } from '../../services/flight-plan.service';
 import { AirplaneService, AirplaneCategorySize } from '../../services/airplane.service';
+import { LocalNotifications, ELocalNotificationTriggerUnit } from '@ionic-native/local-notifications/ngx';
 
 const MAX_ZOOM          = 15;
 const ZOOM_PAN_OPTIONS  = {animate: true, duration: 0.25, easeLinearity: 1.0, noMoveStart: false}; 
@@ -169,7 +170,9 @@ export class MapPage implements OnInit {
     public utils: UtilsService,
     public aviation: AviationService,
     public router: RouterService,
-    public flightPlanService: FlightPlanService) {
+    public flightPlanService: FlightPlanService,
+    private localNotifications: LocalNotifications,
+    private platform: Platform) {
 
       staticXPlaneWsServer  = xpWsSocket;
       staticAlertController = alertCtrl;
@@ -209,6 +212,38 @@ export class MapPage implements OnInit {
              airplaneMarker.setIcon(AIRPLANE_ICON);
              this.checkZoomLevelChangesOnMap(true);
         }
+      });
+
+      this.platform.ready().then(() => {
+
+        // Local Notifications Events
+        // Events Supported: add, trigger, click, clear, cancel, update, clearall and cancelall
+        this.localNotifications.on('click').subscribe(res => {
+          let msg = res.data ? 'CLICK -> ' + res.data.mydata : 'CLICK -> Not Found mydata object';
+          MapPage.presentAlert({
+            header: 'Notification',
+            subHeader: 'SubHeader',
+            mode:'ios',
+            animated: 'true',
+            translucent: ' true',
+            message: `
+            Message Notification:  "` + msg + `"`,
+            buttons: [{text: ' OK '}]
+          });
+        });
+        this.localNotifications.on('trigger').subscribe(res => {
+          let msg = res.data ? 'TRIGGER -> ' + res.data.mydata : 'TRIGGER -> Not Found mydata object';
+          MapPage.presentAlert({
+            header: 'Notification',
+            subHeader: 'SubHeader',
+            mode:'ios',
+            animated: 'true',
+            translucent: ' true',
+            message: `Message Notification: "` + msg + `"`,
+            buttons: [{text: ' OK '}]
+          });
+        });
+
       });
   }
 
@@ -886,6 +921,16 @@ export class MapPage implements OnInit {
   }
 
   connectXPlane() {
+     // Schedule a single notification
+     this.localNotifications.schedule({
+        id: 1,
+        title: 'Notification from MapPauseForMe',
+        text: 'MapPauseForMe Notification',
+        data: { mydata: ' My hidden message this is' },
+        trigger: { in: 5, unit: ELocalNotificationTriggerUnit.SECOND },
+        foreground: true // Show the notification while app is open
+    });
+
     this.subscription = this.xpWsSocket.connect(wsURL).subscribe(
         payload => {
           // Receiving the X-Plane Message
