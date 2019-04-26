@@ -1,0 +1,72 @@
+.ion-thumbnailSize {
+    min-width: 35px !important;
+    min-height: 35px !important;
+    display: inline !important;
+ }
+ 
+ .imgThumbnailSize {
+     width: 35px;
+     height: 35px;
+ }
+ 
+ .iconItem {
+     font-size: 20px;
+     margin-right: 5px;
+ }
+ 
+ .iconItemHeader {
+     font-size: 35px;
+     margin-right: 10px;
+ }
+ 
+ .listHeader {
+     justify-content: end;
+ }
+
+ .valueInHeader {
+     color: blue;
+ }
+
+ .vertical-align-content
+{
+     display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+}
+.labelValue {
+    font-weight: bold;
+    color: blue;
+}
+.labelValueMin {
+    font-weight: bold;
+    color: red;
+}
+.labelValueCurrent {
+    font-weight: bold;
+    color: black;
+}
+
+
+@media (min-width:650px) { // this rule will only trigger if screen width is above 1140px,
+    .page-config {
+        margin-left:auto;
+        margin-right:auto;
+        width: var(--pauseforme-width-max);
+        -moz-box-shadow:    3px 3px 6px 4px rgba(50, 50, 50, 0.60);
+        -webkit-box-shadow: 3px 3px 6px 4px rgba(50, 50, 50, 0.60);
+        box-shadow:         3px 3px 6px 4px rgba(50, 50, 50, 0.60);
+    }
+    .navaidsContainer {
+        padding: 0px 30px 0 30px;
+    }
+    .headerSection {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+}
+
+ion-content.background {
+    --background: var(--pauseform-background);
+}
+
+

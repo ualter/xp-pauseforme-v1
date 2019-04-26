@@ -1,0 +1,300 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>PauseForMe</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="pageContent" class="background">
+  <div class="page-config">
+    <ion-list>
+        <ion-item-group>
+            <ion-item-divider>
+            </ion-item-divider>
+        </ion-item-group>
+        <ion-list-header class="listHeader">
+            <ion-grid class="headerSection">
+              <ion-row class="vertical-align-content">
+                <ion-col>
+                    <ion-label>
+                        <ion-thumbnail class="ion-thumbnailSize"><img src="assets/imgs/altimeter.png" class="imgThumbnailSize" style="width:80px;height:80px;margin-right: 10px;" ></ion-thumbnail>
+                    </ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-label style='font-weight:bolder;'>ALTITUDE</ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="primary" fill="solid"  (click)="sendAltitude()">
+                      SEND&nbsp;<ion-icon name="paper-plane"></ion-icon>
+                    </ion-button>
+                </ion-col>
+                <!-- size="default" -->
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                <ion-col><ion-label>&nbsp;</ion-label></ion-col>
+                <ion-col align-self-center col-25>
+                    <span style="font-weight: bold;font-size: 13px;">{{currentAltitude | number:'3.0-0'}} ft</span>
+                </ion-col>
+                <ion-col><ion-label>&nbsp;</ion-label></ion-col>
+              </ion-row>
+            </ion-grid>
+        </ion-list-header>
+        <ion-item-group>
+          <ion-item>
+            <ion-range style="margin-top: -15px;" min="0" max="40000" step="1" pin="true" dual-knobs="true" mode="ios" [(ngModel)]="altitudeKnobValues">
+                <ion-label slot="start"><span class="labelValueMin">{{altitudeKnobValues.lower | number:'5.0-0'}}</span></ion-label>
+                <ion-label slot="end"><span class="labelValue">{{altitudeKnobValues.upper | number:'5.0-0'}}</span></ion-label>
+            </ion-range>
+          </ion-item>
+        </ion-item-group>
+    </ion-list>
+
+    <ion-list>
+        <ion-item-group>
+            <ion-item-divider>
+            </ion-item-divider>
+        </ion-item-group>
+        <ion-list-header class="listHeader">
+            <ion-grid class="headerSection">
+              <ion-row class="vertical-align-content">
+                <ion-col>
+                    <ion-label>
+                        <ion-thumbnail class="ion-thumbnailSize"><img src="assets/imgs/airspeed.png" class="imgThumbnailSize" style="width:80px;height:80px;margin-right: 10px;" ></ion-thumbnail>
+                    </ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-label style='font-weight:bolder;'>AIRSPEED</ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="primary" fill="solid" size="default" (click)="sendAirspeed()">
+                        SEND&nbsp;<ion-icon name="paper-plane"></ion-icon>
+                      </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                  <ion-col><ion-label>&nbsp;</ion-label></ion-col>
+                  <ion-col align-self-center col-25>
+                      <span style="font-weight: bold;font-size: 13px;">{{currentAirspeed | number:'3.0-0'}} kts</span>
+                  </ion-col>
+                  <ion-col><ion-label>&nbsp;</ion-label></ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-list-header>
+        <ion-item-group>
+          <ion-item>
+            <ion-range style="margin-top: -15px;" min="40" max="400" step="1" pin="true" dual-knobs="true" mode="ios" [(ngModel)]="airspeedKnobValues">
+                <ion-label slot="start"><span class="labelValueMin">{{airspeedKnobValues.lower | number:'3.0-0'}}</span></ion-label>
+                <ion-label slot="end"><span class="labelValue">{{airspeedKnobValues.upper | number:'3.0-0'}}</span></ion-label>
+            </ion-range>
+          </ion-item>
+        </ion-item-group>
+    </ion-list>
+
+
+    <ion-list>
+        <ion-item-group>
+            <ion-item-divider>
+            </ion-item-divider>
+        </ion-item-group>
+        <ion-list-header class="listHeader">
+          <ion-grid class="headerSection">
+            <ion-row class="vertical-align-content">
+              <ion-col>
+                  <ion-label>
+                      <ion-thumbnail class="ion-thumbnailSize"><img src="assets/imgs/heading.png" class="imgThumbnailSize" style="width:80px;height:80px;margin-right: 10px;" ></ion-thumbnail>
+                  </ion-label>
+              </ion-col>
+              <ion-col>
+                  <ion-label style='font-weight:bolder;'>NAVAIDs</ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-list-header>
+        <ion-item-group>
+            <ion-grid class="navaidsContainer">
+              <!-- AIRPORT -->
+              <ion-row>
+                <ion-col>
+                    Airport:&nbsp;<span class="labelValue">{{airportId}}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                <ion-col size="8" style="margin-top: -10px;">
+                    <ion-label>
+                        <span class="labelValueCurrent">{{currentAirportDist | number:'3.0-0'}} nm</span>&nbsp;
+                        <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp;
+                        <span class="labelValue">{{airportDist | number:'3.0-0'}} nm</span>
+                    </ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="primary" fill="solid" size="default" (click)="sendNavaid(airportId,'Airport',airportDist)">
+                        SEND&nbsp;<ion-icon name="paper-plane"></ion-icon>
+                      </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="margin-top:-25px;">
+                    <ion-range min="{{MIN_DIST_NAVAID}}" max="{{MAX_DIST_NAVAID}}" step="{{STEP_NAVAID}}" mode="ios" [(ngModel)]="airportDist">
+                    </ion-range>
+                </ion-col>
+              </ion-row>
+
+              <!-- VOR -->
+              <ion-row>
+                <ion-col>
+                    VOR:&nbsp;<span class="labelValue">{{vorId}}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                <ion-col size="8" style="margin-top: -10px;">
+                    <ion-label>
+                        <span class="labelValueCurrent">{{currentVorDist | number:'3.0-0'}} nm</span>&nbsp;
+                        <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp;
+                        <span class="labelValue">{{vorDist | number:'3.0-0'}} nm</span>
+                    </ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="primary" fill="solid" size="default" (click)="sendNavaid(vorId,'VOR',vorDist)">
+                        SEND&nbsp;<ion-icon name="paper-plane"></ion-icon>
+                      </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="margin-top:-25px;">
+                    <ion-range min="{{MIN_DIST_NAVAID}}" max="{{MAX_DIST_NAVAID}}" step="{{STEP_NAVAID}}" mode="ios" [(ngModel)]="vorDist">
+                    </ion-range>
+                </ion-col>
+              </ion-row>
+
+              <!-- NDB -->
+              <ion-row>
+                <ion-col>
+                    NDB:&nbsp;<span class="labelValue">{{ndbId}}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                <ion-col size="8" style="margin-top: -10px;">
+                    <ion-label>
+                        <span class="labelValueCurrent">{{currentNdbDist | number:'3.0-0'}} nm</span>&nbsp;
+                        <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp;
+                        <span class="labelValue">{{ndbDist | number:'3.0-0'}} nm</span>
+                    </ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="primary" fill="solid" size="default" (click)="sendNavaid(ndbId,'NDB',ndbDist)">
+                        SEND&nbsp;<ion-icon name="paper-plane"></ion-icon>
+                      </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="margin-top:-25px;">
+                    <ion-range min="{{MIN_DIST_NAVAID}}" max="{{MAX_DIST_NAVAID}}" step="{{STEP_NAVAID}}" mode="ios" [(ngModel)]="ndbDist">
+                    </ion-range>
+                </ion-col>
+              </ion-row>
+
+              <!-- FIX -->
+              <ion-row>
+                <ion-col>
+                    Fix:&nbsp;<span class="labelValue">{{fixId}}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                <ion-col size="8" style="margin-top: -10px;">
+                    <ion-label>
+                        <span class="labelValueCurrent">{{currentFixDist | number:'3.0-0'}} nm</span>&nbsp;
+                        <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp;
+                        <span class="labelValue">{{fixDist | number:'3.0-0'}} nm</span>
+                    </ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="primary" fill="solid" size="default" (click)="sendNavaid(fixId,'FIX',fixDist)">
+                        SEND&nbsp;<ion-icon name="paper-plane"></ion-icon>
+                      </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="margin-top:-25px;">
+                    <ion-range min="{{MIN_DIST_NAVAID}}" max="{{MAX_DIST_NAVAID}}" step="{{STEP_NAVAID}}" mode="ios" [(ngModel)]="fixDist">
+                    </ion-range>
+                </ion-col>
+              </ion-row>
+
+              <!-- DME -->
+              <ion-row>
+                <ion-col>
+                    DME:&nbsp;<span class="labelValue">{{dmeId}}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                <ion-col size="8" style="margin-top: -10px;">
+                    <ion-label>
+                        <span class="labelValueCurrent">{{currentDmeDist}} nm</span>&nbsp;
+                        <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp;
+                        <span class="labelValue">{{dmeDist | number:'3.0-0'}} nm</span>
+                    </ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="primary" fill="solid" size="default" (click)="sendNavaid(dmeId,'DME',dmeDist)">
+                        SEND&nbsp;<ion-icon name="paper-plane"></ion-icon>
+                      </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col style="margin-top:-25px;">
+                    <ion-range min="{{MIN_DIST_NAVAID}}" max="{{MAX_DIST_NAVAID}}" step="{{STEP_NAVAID}}" mode="ios" [(ngModel)]="dmeDist">
+                    </ion-range>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item-group>
+    </ion-list>
+
+    <ion-list>
+        <ion-item-group>
+            <ion-item-divider>
+            </ion-item-divider>
+        </ion-item-group>
+        <ion-list-header class="listHeader">
+            <ion-grid class="headerSection">
+              <ion-row class="vertical-align-content">
+                <ion-col>
+                    <ion-label>
+                        <ion-thumbnail class="ion-thumbnailSize"><img src="assets/imgs/{{timeImg}}" class="imgThumbnailSize" style="width:80px;height:80px;margin-right: 10px;" ></ion-thumbnail>
+                    </ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-label style='font-weight:bolder;'>TIME</ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="primary" fill="solid" size="default" (click)="sendTime()">
+                        SEND&nbsp;&nbsp;<ion-icon name="paper-plane"></ion-icon>
+                      </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+        </ion-list-header>
+        <ion-item-group>
+            <ion-grid>
+              <ion-row class="vertical-align-content">
+                <ion-col style="text-align: center;" size="12">
+                    <span class="labelValueCurrent">{{currentTime}}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                <ion-col style="text-align: center; font-weight: bold;color:black" size="12">
+                    <span style="font-size:16px;font-weight: bold">&#x3d;</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vertical-align-content">
+                <ion-col style="text-align: center; font-weight: bold;color:blue" size="12">
+                    <ion-datetime display-format="HH:mm" mode="ios" placeholder="23:00" [(ngModel)]="time"></ion-datetime>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+        </ion-item-group>
+    </ion-list>
+  </div>  
+</ion-content>

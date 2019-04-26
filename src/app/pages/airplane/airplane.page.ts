@@ -21,10 +21,6 @@ export class AirplanePage  implements OnInit {
     public dataService: DataService,
     public airplaneServices: AirplaneService) {
 
-      /*for (let key in this.airplaneServices.airplanes) {
-        let airplane = this.airplaneServices.airplanes[key];
-      }*/
-
       let saveChanges: boolean;
       if ( !this.dataService.settings.airplaneId ) {
         this.dataService.changeSettingsAirplane("a320");
@@ -40,7 +36,6 @@ export class AirplanePage  implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("onInit - AirplanePage");
   }
 
   listAirliners() {

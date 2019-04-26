@@ -16,9 +16,9 @@
 </ion-header>
 
 
-<ion-content class="outer-content">
-
-    <ion-list>
+<ion-content class="background">
+  <div class="page-config">
+    <ion-list class="padding" style="padding-top:30px !important">
       <ion-list-header class="listHeader">
         <ion-label>
             <ion-thumbnail class="ion-thumbnailSize"><img src="assets/imgs/xplane-logo-35.png" class="imgThumbnailSize" style="width:35px;height:35px;margin-right: 10px;" ></ion-thumbnail>
@@ -41,7 +41,7 @@
       </ion-item-group>
     </ion-list>
   
-    <ion-list>
+    <ion-list class="padding">
       <ion-list-header class="listHeader">
         <ion-label>
           <ion-icon name="person" color="primary" class="iconItemHeader" mode="ios"></ion-icon>
@@ -55,7 +55,7 @@
         </ion-item>
     </ion-list>
 
-    <ion-list>
+    <ion-list class="padding">
         <ion-list-header class="listHeader">
             <ion-label>
                 <ion-icon name="airplane" color="primary" class="iconItemHeader" mode="ios"></ion-icon>  
@@ -72,16 +72,20 @@
         </ion-item>
     </ion-list>
 
-    <ion-row>
-        <ion-col width-100 style="text-align: center">
-            <ion-button Large (click)="saveSettings()">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Save
-                &nbsp;
-                <ion-icon name="create" color="light"></ion-icon>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </ion-button>
-        </ion-col>
-    </ion-row>
- 
-  </ion-content>
+    <ion-list>
+        <ion-row class="buttonSaveRow">
+            <ion-col width-100 style="text-align: center">
+                <ion-button Large (click)="saveSettings()">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Save
+                    &nbsp;
+                    <ion-icon name="create" color="light"></ion-icon>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-list>
+
+    
+  </div>
+</ion-content>
 

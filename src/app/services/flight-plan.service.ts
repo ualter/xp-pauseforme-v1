@@ -1,3 +1,4 @@
+import { ToastController } from '@ionic/angular';
 import { XpWebSocketService } from './xp-websocket.service';
 import { Injectable } from "@angular/core";
 import { UtilsService } from "./utils.service";
@@ -164,8 +165,9 @@ export class FlightPlanService {
   flightPlanObservable;
   xpWsSocket: XpWebSocketService;
 
-  constructor(public utils: UtilsService,
-    public aviation: AviationService) {
+  constructor(private utils: UtilsService,
+    private aviation: AviationService,
+    private toastCtrl: ToastController) {
       flightPlanMarkersAirportGroup1 = new leaflet.FeatureGroup();
       flightPlanMarkersAirportGroup2 = new leaflet.FeatureGroup();
       flightPlanMarkersSize1Group    = new leaflet.FeatureGroup();
@@ -750,6 +752,18 @@ createPopUp(navaid) {
         if (  this.xpWsSocket.getWebSocket().readyState == WS_OPEN ) {
             this.utils.info("Send command config to X-Plane: " + msg);
             this.xpWsSocket.getWebSocket().send(msg);
+
+            this.presentTost({
+              header:"",
+              message: "\"Pause at " + dist + "nm from " + navaid.id + "\" sent to X-Plane",
+              position: 'bottom',
+              showCloseButton: false,
+              mode: "md",
+              animated: "true",
+              translucent: "true",
+              duration: 3000
+            });
+
         } else {
             console.log("NOT OPENED!");
         }
@@ -770,9 +784,9 @@ createPopUp(navaid) {
       }
       buttonPause.setAttribute('nm', '' + newDist);
       buttonPause.innerHTML = pauseAscii + ' ' + this.utils.pad(newDist, 3) + 'nm ';
-      }
+  }
 
-      private lessDistancePause(navaid: any, pauseAscii: string, amount? : number) {
+  private lessDistancePause(navaid: any, pauseAscii: string, amount? : number) {
       if ( !amount || amount == 0 ) {
         amount = 5;
       }
@@ -784,5 +798,10 @@ createPopUp(navaid) {
       }
       buttonPause.setAttribute('nm', '' + newDist);
       buttonPause.innerHTML = pauseAscii + ' ' + this.utils.pad(newDist, 3) + 'nm ';
+  }
+
+  async presentTost(toastMessage) {
+    const toast = await this.toastCtrl.create(toastMessage);
+    toast.present();
   }
 }

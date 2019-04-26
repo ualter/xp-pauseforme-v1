@@ -7,33 +7,45 @@
       Airplanes
     </ion-title>
   </ion-toolbar>
+  <div class="page-config">
   <ion-segment [(ngModel)]="airliner" > 
     <ion-segment-button *ngFor="let item of listAirliners()" value="{{item}}">
         {{item}}
     </ion-segment-button>
   </ion-segment>
+  </div>
 </ion-header>
 
-<ion-content class="outer-content">
+<ion-content class="background">
+  <div class="page-config">
     <div [ngSwitch]="airliner">
       <ng-container *ngFor="let item of listAirliners()">
           <ion-list  ngDefaultControl *ngSwitchCase="item" (ionChange)="onChangeHandler($event)">
             <ion-radio-group  [(ngModel)]="model">
                 <ion-item *ngFor="let airplane of listAirplanes(item)">
-                    <ion-label  style="flex:none !important;margin-right: 25px !important;">
-                      <ion-thumbnail>
-                          <img src="{{airplane.icon}}" alt="{{airplane.icon}}">
-                      </ion-thumbnail>
-                    </ion-label>
-                    <ion-label style="flex:none !important;min-width: 160px;">
-                      {{airplane.name}}
-                    </ion-label>
-                    <ion-label >
-                      <ion-radio value="{{airplane.id}}" checked></ion-radio>
-                    </ion-label>
+                    <ion-grid>
+                      <ion-row class="ion-align-items-center ion-justify-content-center">
+                        <ion-col>
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                              <ion-thumbnail>
+                                  <img src="{{airplane.icon}}" alt="{{airplane.icon}}">
+                              </ion-thumbnail>
+                            </div>  
+                        </ion-col>
+                        <ion-col>
+                            {{airplane.name}}
+                        </ion-col>
+                        <ion-col>
+                            <div style="/*display: flex; justify-content: center; align-items: center;*/margin-left: 30px;">
+                                <ion-radio value="{{airplane.id}}" checked></ion-radio>
+                            </div>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
                 </ion-item>
             </ion-radio-group>
           </ion-list>
       </ng-container>    
     </div>  
+  </div>  
   </ion-content>

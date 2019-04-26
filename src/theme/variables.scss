@@ -74,4 +74,28 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  
+  // These variables are not working accordingly IONIC Sites - It is a BUG!
+  // https://forum.ionicframework.com/t/unable-to-modify-grid-break-points-in-ionic-4/160679
+  /* --ion-grid-padding:               5px;
+  --ion-grid-padding-xs:            5px;
+  --ion-grid-padding-sm:            5px;
+  --ion-grid-padding-md:            5px;
+  --ion-grid-padding-lg:            5px;
+  --ion-grid-padding-xl:            5px;
+
+  --ion-grid-width-xs:              100%;
+  --ion-grid-width-sm:              540px;
+  --ion-grid-width-md:              720px;
+  --ion-grid-width-lg:              960px;
+  --ion-grid-width-xl:              1140px; */
+
+
+  // Those is working!
+  //--ion-background-color: lightgray;
+  //--ion-background-color-rgb
+
+  --pauseforme-width-max: 650px;
+  --pauseform-background: url('../assets/imgs/background_1.png') no-repeat;
 }

@@ -9,6 +9,7 @@ export class XpWebSocketService {
 
   private subject: Subject<MessageEvent>;
   private ws : any;
+  private lastMessageReceived: any;
   
   constructor(private utils: UtilsService) { 
   }
@@ -51,6 +52,13 @@ export class XpWebSocketService {
       }
     }
     return Subject.create(observer, observable);
+  }
+
+  public setLastMessageReceive(msg: any) {
+    this.lastMessageReceived = msg;
+  }
+  public getLastMessageReceive(){
+    return this.lastMessageReceived;
   }
 
   public observable() {

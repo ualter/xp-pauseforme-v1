@@ -35,6 +35,12 @@ export class UtilsService {
     constructor(private platform: Platform) {
     }
 
+    formatCurrentTime(tm) {
+        let h = tm.split(":")[0];
+        let m = tm.split(":")[1];
+        return this.pad(h,2) + ":" + this.pad(m,2);
+      }
+
     pad(num, size) {
         return ('000000000' + num).substr(-size); 
     }

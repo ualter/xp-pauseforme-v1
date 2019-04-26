@@ -1,28 +1,28 @@
 {
    "airplane":{
-      "lat":42.2574,
-      "lng":1.79707,
-      "airspeed":99,
-      "trueAirspeed":113,
-      "currentAltitude":9249,
-      "currentAltitude2":9240,
-      "vsFpm":7,
-      "groundspeed":124,
+      "lat":49.7668,
+      "lng":1.9109,
+      "airspeed":103,
+      "trueAirspeed":118,
+      "currentAltitude":9100,
+      "currentAltitude2":9090,
+      "vsFpm":0,
+      "groundspeed":112,
       "currentFreqNav1":11770,
-      "currentDistDmeNav1":88.2318,
-      "currentTimeDmeNav1":289.683,
+      "currentDistDmeNav1":0,
+      "currentTimeDmeNav1":0,
       "currentFreqNav2":0,
       "currentTimeDmeNav2":0,
       "currentDistDmeNav2":0,
-      "currentGPSDistDme":58,
-      "currentGPSTimeDme":28,
-      "destination":"Not Found: NOT FOUND  (NTFND)",
-      "headingDegMag":77,
-      "headingAHARS":79,
-      "heading":79,
+      "currentGPSDistDme":603,
+      "currentGPSTimeDme":316,
+      "destination":"Airport: Madrid Barajas  (LEMD)",
+      "headingDegMag":358,
+      "headingAHARS":358,
+      "heading":358,
       "autopilot":{
          "on":1,
-         "heading":81,
+         "heading":359,
          "altitude":9100,
          "vsFpm":399,
          "vsStatus":0,
@@ -30,34 +30,50 @@
       },
       "pauseforme":{
          "navaid":{
-            "userAirportDistance":30,
-            "userVORDistance":5,
-            "userNDBDistance":1625,
-            "userFixDistance":5,
-            "userDMEDistance":2
+            "userAirportDistance":10,
+            "userVORDistance":18,
+            "userNDBDistance":14,
+            "userFixDistance":122,
+            "userDMEDistance":3,
+            "config":{
+               "id":{
+                  "airport":"LEBL",
+                  "vor":"GDV",
+                  "ndb":"HIE",
+                  "fix":"DIKUT",
+                  "dme":"BCN"
+               },
+               "distance":{
+                  "airport":509,
+                  "vor":1526,
+                  "ndb":1601,
+                  "fix":591,
+                  "dme":229
+               }
+            }
          },
-         "timePause":"15:48",
+         "timePause":"17:30",
          "altitude":{
-            "min":26000,
-            "max":29000,
+            "min":8450,
+            "max":22188,
             "selected":0
          },
          "speed":{
-            "min":180,
-            "max":340,
+            "min":93,
+            "max":238,
             "selected":0
          }
       },
       "nextDestination":{
          "gps":{
-            "id":"NTFND",
-            "name":"NOT FOUND",
-            "latitude":7.14662e-43,
-            "longitude":5.89034e-32,
-            "dmeDistance":58,
-            "dmeTime":28,
-            "distance":2540,
-            "type":"Not Found",
+            "id":"LEMD",
+            "name":"Madrid Barajas",
+            "latitude":40.4706,
+            "longitude":-3.56156,
+            "dmeDistance":603,
+            "dmeTime":316,
+            "distance":604,
+            "type":"Airport",
             "status":1
          },
          "fms":{
@@ -70,7 +86,8 @@
             "type":"",
             "status":0
          }
-      }
+      },
+      "time":"16:32"
    },
    "isPaused":0,
    "isBatteryOn":1

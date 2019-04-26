@@ -249,10 +249,10 @@ export class MapPage implements OnInit {
 
           // Share the connection X-Plane with FlightPlanService
           this.flightPlanService.setXpWsSocket(this.xpWsSocket);
+          //console.log(message); // print the JSON once
         }
 
         if ( this.utils.isJsonMessage(message) ) {
-            //console.log(message);
             var json = JSON.parse(message);
             this.utils.trace("JSON received: ",json);
 
@@ -890,6 +890,7 @@ export class MapPage implements OnInit {
         payload => {
           // Receiving the X-Plane Message
           this.onMessageReceived(payload);
+          this.xpWsSocket.setLastMessageReceive(payload.data);
           // Dismiss the signal of attempt to connect with X-Plane
           this.hideContactingXPlaneImg();
         },
@@ -1007,35 +1008,36 @@ export class MapPage implements OnInit {
     if ( attempingConnectTimes > (RETRIES_ATTEMPTING_CONNECT-1) ) {
       clearInterval(threadAttemptToConnect);
       threadAttemptToConnect = null;
-      let alert = staticAlertController.create({
-      title: 'Warning',
-      message: `
-        <p > <b>` + attempingConnectTimes + `</b> attempts were already made to contact X-Plane. Let's see...<br><br><b>1)</b> 
-        Did you check the address?<br>
-        <b>IP</b>: <font color="blue"><b>` + this.xplaneAddress + `</b></font><br>
-        <b>Port</b>: <font color="blue"><b>` + this.xplanePort + `</b></font><br><br>
-        <b>2)</b> Are you sure the PauseForMe plugin Transmitter is started?</p>
-      `,
-      buttons: [
-        {
-          text: 'Forget it',
-          role: 'cancel',
-          handler: () => {
-            this.stopAttemptingToConnect();
+      MapPage.presentAlert({
+        title: 'Warning',
+        message: `
+          <p > <b>` + attempingConnectTimes + `</b> attempts were already made to contact X-Plane. Let's see...<br><br><b>1)</b> 
+          Did you check the address?<br>
+          <b>IP</b>: <font color="blue"><b>` + this.xplaneAddress + `</b></font><br>
+          <b>Port</b>: <font color="blue"><b>` + this.xplanePort + `</b></font><br><br>
+          <b>2)</b> Are you sure the PauseForMe plugin Transmitter is started?</p>
+        `,
+        buttons: [
+          {
+            text: 'Forget it',
+            role: 'cancel',
+            handler: () => {
+              this.stopAttemptingToConnect();
+            }
+          },
+          {
+            text: 'Keep trying',
+            handler: (e: any) => {
+              attempingConnectTimes = 0;
+              this.connect();
+              this.activateThreadConnection();
+              if ( e ) {
+                e.stopPropagation();
+              }
+            }
           }
-        },
-        {
-          text: 'Keep trying',
-          handler: (e: any) => {
-            attempingConnectTimes = 0;
-            this.connect();
-            this.activateThreadConnection();
-            e.stopPropagation();
-          }
-        }
-      ]
+        ]
       });
-      alert.present();
     } else {
       this.connect();
     }
@@ -1172,7 +1174,7 @@ export class MapPage implements OnInit {
         </td>
       </tr>
       <tr>
-        <td>
+        <td width="75%">
           <span style="font-size:` + fontSizeLabel + `px;` + fontFamily + `">Ground Speed....:</span>&nbsp;&nbsp;
         </td>
         <td align="right" style="padding-right:` + paddingValue + `px;">
@@ -1180,6 +1182,17 @@ export class MapPage implements OnInit {
         </td>
         <td>
           <span style="color:black;font-weight:bold;font-size:` + fontSizeUnit +`px;">kts</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span style="font-size:` + fontSizeLabel + `px;` + fontFamily + `">Time............:</span>&nbsp;&nbsp;
+        </td>
+        <td align="right" style="padding-right:` + paddingValue + `px;">
+          <span style="font-size:` + fontSizeValue + `px;color:blue;font-weight:bold;">` + this.utils.formatCurrentTime(airplaneData.time) + `</span>
+        </td>
+        <td>
+          <span style="color:black;font-weight:bold;font-size:` + fontSizeUnit +`px;">GMT</span>
         </td>
       </tr>
       `+ destinationCell + `
