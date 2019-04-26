@@ -37,30 +37,33 @@ page-settings {
         -webkit-box-shadow: 3px 3px 6px 4px rgba(50, 50, 50, 0.60);
         box-shadow:         3px 3px 6px 4px rgba(50, 50, 50, 0.60);
     }
-    .navaidsContainer {
-        padding: 0px 30px 0 30px;
-    }
-    .headerSection {
-        padding-left: 30px;
-        padding-right: 30px;
-    }
-    ion-list.padding {
-        padding: 0px 50px 50px 50px;
-    }
-    .buttonSaveRow {
-        padding:0px 0px 30px 0px;
-    }
     ion-content.background {
         --background: var(--pauseform-background);
     }
 }
 
-@media (min-width:450px) and (max-width:649px) { // this rule will only trigger if screen width is above 820x,
-    .buttonSaveRow {
-        padding:30px 0px 30px 0px;
+@media (min-width:560px) {
+    ion-list.padding {
+        padding: 0px 50px 50px 50px;
     }
+
+}
+@media (min-width:480px) and (max-width:649px) { // this rule will only trigger if screen width is above 820x,
     ion-content.background {
         --background: var(--pauseform-background);
     }
+}
+
+ion-item-divider.config {
+    padding-bottom: 3px;
+    background-color: #F2F2F2;
+}
+ion-list-header.padding {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.buttonSaveRow {
+    padding:30px 0px 30px 0px;
 }
 

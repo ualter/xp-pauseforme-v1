@@ -18,72 +18,85 @@
 
 <ion-content class="background">
   <div class="page-config">
-    <ion-list class="padding" style="padding-top:30px !important">
-      <ion-list-header class="listHeader">
-        <ion-label>
-            <ion-thumbnail class="ion-thumbnailSize"><img src="assets/imgs/xplane-logo-35.png" class="imgThumbnailSize" style="width:35px;height:35px;margin-right: 10px;" ></ion-thumbnail>
-        </ion-label>
-        <ion-label>X-Plane Communication</ion-label>
-      </ion-list-header>
-  
-      <ion-item-group>
-        <ion-item>
-          <ion-icon name="link" class="iconItem" mode="ios"></ion-icon>
-          <ion-label>Address:</ion-label>
-          <ion-input type="text" placeholder="127.0.0.1" [(ngModel)]="xplaneAddress" color="primary"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-icon name="link" class="iconItem" mode="ios"></ion-icon>
-          <ion-label>Port:</ion-label>
-          <ion-input type="text" placeholder="9002" [(ngModel)]="xplanePort"></ion-input>
-        </ion-item>
-      </ion-item-group>
-    </ion-list>
-  
-    <ion-list class="padding">
-      <ion-list-header class="listHeader">
-        <ion-label>
-          <ion-icon name="person" color="primary" class="iconItemHeader" mode="ios"></ion-icon>
-        </ion-label>
-        <ion-label>Me</ion-label>
-      </ion-list-header>
-      <ion-item>
-          <ion-icon name="phone-portrait" class="iconItem" mode="ios"></ion-icon>
-          <ion-label>Name:</ion-label>
-          <ion-input type="text" placeholder="UALTER iPhone" [(ngModel)]="deviceName"></ion-input>
-        </ion-item>
-    </ion-list>
+    <ion-list class="padding" style="padding-top:15px !important">
+        <ion-item-group>
 
-    <ion-list class="padding">
-        <ion-list-header class="listHeader">
+          <!-- <ion-item-divider class="config"></ion-item-divider> -->
+
+          <ion-list-header class="listHeader padding">
             <ion-label>
-                <ion-icon name="airplane" color="primary" class="iconItemHeader" mode="ios"></ion-icon>  
+                <ion-thumbnail class="ion-thumbnailSize"><img src="assets/imgs/xplane-logo-35.png" class="imgThumbnailSize" style="width:35px;height:35px;margin-right: 10px;" ></ion-thumbnail>
             </ion-label>
-            <ion-label>Airplane</ion-label>
-        </ion-list-header>
-        <ion-item button (click)="openAirplanesPage()" style="justify-content: end">
-            <ion-label style="flex:none !important;">
-              <ion-thumbnail class="ion-thumbnailSize">
-                <ion-img [src]="airplane.icon" style="width: 60px; height: 60px; margin-right: 10px;"></ion-img>
-              </ion-thumbnail>
+            <ion-label>X-Plane Communication</ion-label>
+          </ion-list-header>
+          <ion-item lines="full">
+            <ion-icon name="link" class="iconItem" mode="ios"></ion-icon>
+            <ion-label>Address:</ion-label>
+            <ion-input type="text" placeholder="127.0.0.1" [(ngModel)]="xplaneAddress" color="primary"></ion-input>
+          </ion-item>
+          <ion-item lines="full">
+            <ion-icon name="link" class="iconItem" mode="ios"></ion-icon>
+            <ion-label>Port:</ion-label>
+            <ion-input type="text" placeholder="9002" [(ngModel)]="xplanePort"></ion-input>
+          </ion-item>
+
+          <ion-item-divider class="config"></ion-item-divider>
+
+          <ion-list-header class="listHeader padding">
+            <ion-label>
+              <ion-icon name="person" color="primary" class="iconItemHeader" mode="ios"></ion-icon>
             </ion-label>
-            <ion-label>{{airplane.name}}</ion-label>
-        </ion-item>
+            <ion-label>Me</ion-label>
+          </ion-list-header>
+          <ion-item lines="full">
+            <ion-icon name="phone-portrait" class="iconItem" mode="ios"></ion-icon>
+            <ion-label>Name:</ion-label>
+            <ion-input type="text" placeholder="UALTER iPhone" [(ngModel)]="deviceName"></ion-input>
+          </ion-item>
+
+          <ion-item-divider class="config"></ion-item-divider>
+
+          <ion-list-header class="listHeader padding">
+              <ion-label>
+                  <ion-icon name="airplane" color="primary" class="iconItemHeader" mode="ios"></ion-icon>  
+              </ion-label>
+              <ion-label>Airplane</ion-label>
+          </ion-list-header>
+          <ion-item lines="full" button (click)="openAirplanesPage()" style="justify-content: end">
+              <ion-label style="flex:none !important;">
+                <ion-thumbnail class="ion-thumbnailSize">
+                  <ion-img [src]="airplane.icon" style="width: 60px; height: 60px; margin-right: 10px;"></ion-img>
+                </ion-thumbnail>
+              </ion-label>
+              <ion-label>{{airplane.name}}</ion-label>
+          </ion-item>
+
+          <ion-item-divider class="config"></ion-item-divider>
+
+          <ion-item lines="full">
+            <ion-grid>
+              <ion-row class="buttonSaveRow">
+                  <ion-col width-100 style="text-align: center">
+                      <ion-button Large (click)="saveSettings()">
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Save
+                          &nbsp;
+                          <ion-icon name="create" color="light"></ion-icon>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </ion-button>
+                  </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+
+        </ion-item-group>
     </ion-list>
 
-    <ion-list>
-        <ion-row class="buttonSaveRow">
-            <ion-col width-100 style="text-align: center">
-                <ion-button Large (click)="saveSettings()">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Save
-                    &nbsp;
-                    <ion-icon name="create" color="light"></ion-icon>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </ion-button>
-            </ion-col>
-        </ion-row>
-    </ion-list>
+      
+
+      
+
+      
+
 
     
   </div>

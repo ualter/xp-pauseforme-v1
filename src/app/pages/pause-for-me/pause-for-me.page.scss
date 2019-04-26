@@ -47,7 +47,7 @@
 }
 
 
-@media (min-width:650px) { // this rule will only trigger if screen width is above 1140px,
+@media (min-width:650px) { // this rule will only trigger if screen width is above Xpx,
     .page-config {
         margin-left:auto;
         margin-right:auto;
@@ -63,10 +63,24 @@
         padding-left: 30px;
         padding-right: 30px;
     }
+    ion-content.background {
+        --background: var(--pauseform-background);
+    }
 }
 
-ion-content.background {
-    --background: var(--pauseform-background);
+@media (min-width:480px) and (max-width:649px) { 
+    ion-content.background {
+        --background: var(--pauseform-background);
+    }
 }
 
+
+ion-item-divider.config {
+    padding-bottom: 3px;
+    background-color: #F2F2F2;
+}
+ion-list-header.padding {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
 
