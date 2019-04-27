@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { DataService } from '../../services/data.service';
 import { AirplaneService } from '../../services/airplane.service';
-import { Airplane } from '../../services/Airplane';
+import { Airplane } from '../../services/airplane';
 
 @Component({
   selector: 'app-airplane',
