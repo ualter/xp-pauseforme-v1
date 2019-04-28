@@ -7,7 +7,8 @@ const routes: Routes = [
   { path: 'map',          loadChildren: './pages/map/map.module#MapPageModule' },
   { path: 'setting',      loadChildren: './pages/setting/setting.module#SettingPageModule' },
   { path: 'airplane',     loadChildren: './pages/airplane/airplane.module#AirplanePageModule' },
-  { path: 'pause-for-me', loadChildren: './pages/pause-for-me/pause-for-me.module#PauseForMePageModule' }
+  { path: 'pause-for-me', loadChildren: './pages/pause-for-me/pause-for-me.module#PauseForMePageModule' },
+  { path: 'notification', loadChildren: './pages/notification/notification.module#NotificationPageModule' }
 ];
 
 @NgModule({

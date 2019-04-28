@@ -1,28 +1,28 @@
 {
    "airplane":{
-      "lat":49.7668,
-      "lng":1.9109,
-      "airspeed":103,
-      "trueAirspeed":118,
-      "currentAltitude":9100,
-      "currentAltitude2":9090,
-      "vsFpm":0,
-      "groundspeed":112,
+      "lat":61.8591,
+      "lng":-8.00686,
+      "airspeed":110,
+      "trueAirspeed":124,
+      "currentAltitude":7890,
+      "currentAltitude2":7881,
+      "vsFpm":10,
+      "groundspeed":130,
       "currentFreqNav1":11770,
       "currentDistDmeNav1":0,
       "currentTimeDmeNav1":0,
       "currentFreqNav2":0,
       "currentTimeDmeNav2":0,
       "currentDistDmeNav2":0,
-      "currentGPSDistDme":603,
-      "currentGPSTimeDme":316,
+      "currentGPSDistDme":1293,
+      "currentGPSTimeDme":595,
       "destination":"Airport: Madrid Barajas  (LEMD)",
-      "headingDegMag":358,
-      "headingAHARS":358,
-      "heading":358,
+      "headingDegMag":177,
+      "headingAHARS":177,
+      "heading":177,
       "autopilot":{
          "on":1,
-         "heading":359,
+         "heading":172,
          "altitude":9100,
          "vsFpm":399,
          "vsStatus":0,
@@ -30,37 +30,45 @@
       },
       "pauseforme":{
          "navaid":{
-            "userAirportDistance":10,
+            "userAirportDistance":64,
             "userVORDistance":18,
-            "userNDBDistance":14,
-            "userFixDistance":122,
+            "userNDBDistance":756,
+            "userFixDistance":10,
             "userDMEDistance":3,
             "config":{
                "id":{
-                  "airport":"LEBL",
-                  "vor":"GDV",
+                  "airport":"EGPA",
+                  "vor":"SLL",
                   "ndb":"HIE",
-                  "fix":"DIKUT",
+                  "fix":"LOTOS",
                   "dme":"BCN"
                },
+               "selected":{
+                  "airport":0,
+                  "vor":0,
+                  "ndb":0,
+                  "fix":0,
+                  "dme":0
+               },
                "distance":{
-                  "airport":509,
-                  "vor":1526,
-                  "ndb":1601,
-                  "fix":591,
-                  "dme":229
+                  "airport":231,
+                  "vor":1275,
+                  "ndb":2082,
+                  "fix":1321,
+                  "dme":628
                }
             }
          },
-         "timePause":"17:30",
+         "timePause":"18:24:45",
+         "timePauseSelected":0,
          "altitude":{
-            "min":8450,
-            "max":22188,
+            "min":6144,
+            "max":14124,
             "selected":0
          },
          "speed":{
-            "min":93,
-            "max":238,
+            "min":85,
+            "max":200,
             "selected":0
          }
       },
@@ -70,9 +78,9 @@
             "name":"Madrid Barajas",
             "latitude":40.4706,
             "longitude":-3.56156,
-            "dmeDistance":603,
-            "dmeTime":316,
-            "distance":604,
+            "dmeDistance":1293,
+            "dmeTime":595,
+            "distance":1295,
             "type":"Airport",
             "status":1
          },
@@ -87,7 +95,7 @@
             "status":0
          }
       },
-      "time":"16:32"
+      "time":"18:55:27"
    },
    "isPaused":0,
    "isBatteryOn":1

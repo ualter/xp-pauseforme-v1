@@ -21,7 +21,9 @@
                       </ion-label>
                   </ion-col>
                   <ion-col>
-                      <ion-label style='font-weight:bolder;'>ALTITUDE</ion-label>
+                      <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!altitudeSelected"></ion-icon>
+                      <span [hidden]="!altitudeSelected">&nbsp;</span>
+                      <span style='font-weight:bolder;'>ALTITUDE</span>
                   </ion-col>
                   <ion-col>
                       <ion-button color="primary" fill="solid"  (click)="sendAltitude()">
@@ -39,14 +41,14 @@
                 </ion-row>
               </ion-grid>
           </ion-list-header>
-          <ion-item>
+          <ion-item lines="full">
             <ion-range style="margin-top: -15px;" min="0" max="40000" step="1" pin="true" dual-knobs="true" mode="ios" [(ngModel)]="altitudeKnobValues">
                 <ion-label slot="start"><span class="labelValueMin">{{altitudeKnobValues.lower | number:'5.0-0'}}</span></ion-label>
                 <ion-label slot="end"><span class="labelValue">{{altitudeKnobValues.upper | number:'5.0-0'}}</span></ion-label>
             </ion-range>
           </ion-item>
 
-          <ion-item-divider class="config"></ion-item-divider>
+          <ion-item-divider lines="full" class="config"></ion-item-divider>
 
           <ion-list-header class="listHeader">
               <ion-grid class="headerSection">
@@ -57,7 +59,9 @@
                       </ion-label>
                   </ion-col>
                   <ion-col>
-                      <ion-label style='font-weight:bolder;'>AIRSPEED</ion-label>
+                      <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airspeedSelected"></ion-icon>
+                      <span [hidden]="!airspeedSelected">&nbsp;</span>
+                      <span style='font-weight:bolder;'>AIRSPEED</span>
                   </ion-col>
                   <ion-col>
                       <ion-button color="primary" fill="solid" size="default" (click)="sendAirspeed()">
@@ -74,14 +78,14 @@
                   </ion-row>
               </ion-grid>
           </ion-list-header>
-          <ion-item>
+          <ion-item lines="full">
             <ion-range style="margin-top: -15px;" min="40" max="400" step="1" pin="true" dual-knobs="true" mode="ios" [(ngModel)]="airspeedKnobValues">
                 <ion-label slot="start"><span class="labelValueMin">{{airspeedKnobValues.lower | number:'3.0-0'}}</span></ion-label>
                 <ion-label slot="end"><span class="labelValue">{{airspeedKnobValues.upper | number:'3.0-0'}}</span></ion-label>
             </ion-range>
           </ion-item>
 
-          <ion-item-divider class="config"></ion-item-divider>
+          <ion-item-divider lines="full" class="config"></ion-item-divider>
 
           <ion-list-header class="listHeader">
             <ion-grid class="headerSection">
@@ -97,11 +101,12 @@
               </ion-row>
             </ion-grid>
           </ion-list-header>
-          <ion-item>
+          <ion-item lines="full">
             <ion-grid class="navaidsContainer">
                 <!-- AIRPORT -->
                 <ion-row>
                   <ion-col>
+                      <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
                       Airport:&nbsp;<span class="labelValue">{{airportId}}</span>
                   </ion-col>
                 </ion-row>
@@ -129,6 +134,7 @@
                 <!-- VOR -->
                 <ion-row>
                   <ion-col>
+                      <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!vorSelected"></ion-icon>
                       VOR:&nbsp;<span class="labelValue">{{vorId}}</span>
                   </ion-col>
                 </ion-row>
@@ -156,6 +162,7 @@
                 <!-- NDB -->
                 <ion-row>
                   <ion-col>
+                      <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!ndbSelected"></ion-icon>
                       NDB:&nbsp;<span class="labelValue">{{ndbId}}</span>
                   </ion-col>
                 </ion-row>
@@ -183,6 +190,7 @@
                 <!-- FIX -->
                 <ion-row>
                   <ion-col>
+                      <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!fixSelected"></ion-icon>
                       Fix:&nbsp;<span class="labelValue">{{fixId}}</span>
                   </ion-col>
                 </ion-row>
@@ -210,6 +218,7 @@
                 <!-- DME -->
                 <ion-row>
                   <ion-col>
+                      <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!dmeSelected"></ion-icon>
                       DME:&nbsp;<span class="labelValue">{{dmeId}}</span>
                   </ion-col>
                 </ion-row>
@@ -236,7 +245,7 @@
               </ion-grid>
           </ion-item>
 
-          <ion-item-divider class="config"></ion-item-divider>
+          <ion-item-divider lines="full" class="config"></ion-item-divider>
 
           <ion-list-header class="listHeader">
               <ion-grid class="headerSection">
@@ -247,7 +256,9 @@
                       </ion-label>
                   </ion-col>
                   <ion-col>
-                      <ion-label style='font-weight:bolder;'>TIME</ion-label>
+                      <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!timeSelected"></ion-icon>
+                      <span [hidden]="!timeSelected">&nbsp;</span>
+                      <span style='font-weight:bolder;'>TIME</span>
                   </ion-col>
                   <ion-col>
                       <ion-button color="primary" fill="solid" size="default" (click)="sendTime()">
@@ -257,7 +268,7 @@
                 </ion-row>
               </ion-grid>
           </ion-list-header>
-          <ion-item>
+          <ion-item lines="full">
               <ion-grid>
                 <ion-row class="vertical-align-content">
                   <ion-col style="text-align: center;" size="12">
@@ -271,7 +282,7 @@
                 </ion-row>
                 <ion-row class="vertical-align-content" style="margin-bottom: 15px;">
                   <ion-col style="text-align: center; font-weight: bold;color:blue" size="12">
-                      <ion-datetime display-format="HH:mm" mode="ios" placeholder="23:00" [(ngModel)]="time"></ion-datetime>
+                      <ion-datetime display-format="HH:mm:ss" mode="ios" placeholder="23:15:00" [(ngModel)]="time"></ion-datetime>
                   </ion-col>
                 </ion-row>
               </ion-grid>

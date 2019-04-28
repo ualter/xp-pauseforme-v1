@@ -1,3 +1,4 @@
+import { MapService } from '../../services/map.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -12,6 +13,7 @@ import { RouterService } from '../../services/router.service';
 import { FlightPlanService } from '../../services/flight-plan.service';
 import { AirplaneService, AirplaneCategorySize } from '../../services/airplane.service';
 import { LocalNotifications, ELocalNotificationTriggerUnit } from '@ionic-native/local-notifications/ngx';
+import { isUndefined } from 'util';
 
 const MAX_ZOOM          = 15;
 const ZOOM_PAN_OPTIONS  = {animate: true, duration: 0.25, easeLinearity: 1.0, noMoveStart: false}; 
@@ -160,19 +162,20 @@ export class MapPage implements OnInit {
   private static myself:MapPage;
 
   constructor(
-    public dataService: DataService,
-    public airplaneServices: AirplaneService,
-    public navCtrl: NavController, 
-    public geolocation: Geolocation,
-    public alertCtrl: AlertController,
-    public toastCtrl: ToastController,
-    public xpWsSocket: XpWebSocketService, 
-    public utils: UtilsService,
-    public aviation: AviationService,
-    public router: RouterService,
-    public flightPlanService: FlightPlanService,
+    private dataService: DataService,
+    private airplaneServices: AirplaneService,
+    private navCtrl: NavController, 
+    private geolocation: Geolocation,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private xpWsSocket: XpWebSocketService, 
+    private utils: UtilsService,
+    private aviation: AviationService,
+    private router: RouterService,
+    private flightPlanService: FlightPlanService,
     private localNotifications: LocalNotifications,
-    private platform: Platform) {
+    private platform: Platform,
+    private mapService: MapService) {
 
       staticXPlaneWsServer  = xpWsSocket;
       staticAlertController = alertCtrl;
@@ -284,7 +287,7 @@ export class MapPage implements OnInit {
 
           // Share the connection X-Plane with FlightPlanService
           this.flightPlanService.setXpWsSocket(this.xpWsSocket);
-          //console.log(message); // print the JSON once
+          console.log(message); // print the JSON once
         }
 
         if ( this.utils.isJsonMessage(message) ) {
@@ -301,7 +304,7 @@ export class MapPage implements OnInit {
             else if ( message.indexOf('flightPlan') >= 0 ) {
               this.onMessageFlightPlan(json);
             } else {
-              this.utils.trace("Message not processed: ",message);
+              this.utils.warn("Message not processed: ", message);
             }
         } else {
             this.utils.warn("Received JSON message it is NOT OK..: \"" + message + "\" from " + origin);
@@ -384,6 +387,7 @@ export class MapPage implements OnInit {
     } 
     // Reposition the Airplane new give Lat/Lng
     this.updateAirplanePosition(json.airplane, bearing);
+    this.checkTimeFromEventualPauseEvent(json.airplane, bearing);
     lastLat          = json.airplane.lat;
     lastLng          = json.airplane.lng;
     lastAirplaneData = json.airplane; 
@@ -449,6 +453,57 @@ export class MapPage implements OnInit {
 
     latitude  = _lat;
     longitude = _lng;
+  }
+
+  // Check if there's a possible Pause Event ahead, and so calculate its elapsed time to trigger previous notifications
+  checkTimeFromEventualPauseEvent(jsonAirplane, bearing) {
+    // Check if any parameter it's selected to trigger a Pause
+    // (With this parameter must be possible to calculate a estimated time to happen a Event Pause, parameters based on:
+    // * Time (An specific hour selected - very simple!)
+    // * Distance (From a selected navaid, GPS - using the airplane speed)
+
+    // By Time (Hour:Minute)
+    // Where X is the estimated time to trigger an Pause Event
+    // Time (X = selected time - airplane time)
+    if ( jsonAirplane.pauseforme.timePauseSelected == 1 ) {
+      this.mapService.calculateETAPauseTime(jsonAirplane.time, jsonAirplane.pauseforme.timePause);
+    }
+
+    let airplaneGroundspeed = parseInt(jsonAirplane.groundspeed);
+      if ( airplaneGroundspeed > 0 ) {
+        // By Navaids (Distance vs. Speed)
+        // Check if any Navaid is selected to pause acordingly with distance
+        // Check Minutes according to distance to Navaid target and airplane ground speed, the formula:
+        if ( jsonAirplane.pauseforme.navaid.config.selected.airport == 1 ) {
+          this.mapService.calculateETAPauseNavaIdAirport(airplaneGroundspeed, jsonAirplane.pauseforme.navaid.config.distance.airport);
+        } else {
+          this.mapService.resetETAPauseNavaIdAirport();
+        }
+        if ( jsonAirplane.pauseforme.navaid.config.selected.vor == 1 ) {
+          this.mapService.calculateETAPauseNavaIdVor(airplaneGroundspeed, jsonAirplane.pauseforme.navaid.config.distance.vor);
+        } else {
+          this.mapService.resetETAPauseNavaIdVor();
+        }
+        if ( jsonAirplane.pauseforme.navaid.config.selected.ndb == 1 ) {
+          this.mapService.calculateETAPauseNavaIdNdb(airplaneGroundspeed, jsonAirplane.pauseforme.navaid.config.distance.ndb);
+        } else {
+          this.mapService.resetETAPauseNavaIdNdb();
+        }
+        if ( jsonAirplane.pauseforme.navaid.config.selected.fix == 1 ) {
+          this.mapService.calculateETAPauseNavaIdFix(airplaneGroundspeed, jsonAirplane.pauseforme.navaid.config.distance.fix);
+        } else {
+          this.mapService.resetETAPauseNavaIdFix();
+        }
+        if ( jsonAirplane.pauseforme.navaid.config.selected.dme == 1 ) {
+          this.mapService.calculateETAPauseNavaIdDme(airplaneGroundspeed, jsonAirplane.pauseforme.navaid.config.distance.dme);
+        } else {
+          this.mapService.resetETAPauseNavaIdDme();
+        }
+    } else {
+      // The Airplane is stopped! No ground speed detected.
+      this.mapService.resetAllNavaids();
+    }
+    
   }
 
   adaptAngleForIcon(angle) {

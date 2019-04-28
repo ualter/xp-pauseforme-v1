@@ -38,11 +38,43 @@ export class UtilsService {
     formatCurrentTime(tm) {
         let h = tm.split(":")[0];
         let m = tm.split(":")[1];
-        return this.pad(h,2) + ":" + this.pad(m,2);
+        let s = tm.split(":")[2];
+        return this.pad(h,2) + ":" + this.pad(m,2) + ":" + this.pad(s,2);
       }
 
     pad(num, size) {
         return ('000000000' + num).substr(-size); 
+    }
+
+    mountTimeFromSeconds(seconds: number) {
+        return new Date(seconds * 1000).toISOString().substr(11, 8);
+    }
+
+    diffHours(start, end) {
+        start         = start.split(":");
+        end           = end.split(":");
+        let startDate = new Date(0, 0, 0, start[0], start[1], start[2]);
+        let endDate   = new Date(0, 0, 0, end[0], end[1], end[2]);
+        let diff      = endDate.getTime() - startDate.getTime();
+        
+        let hours     = Math.floor(diff / 1000 / 60 / 60);
+        
+        diff         -= hours * 1000 * 60 * 60;
+        let minutes   = Math.floor(diff / 1000 / 60);
+        
+        diff         -= minutes * 1000 * 60;
+        let seconds   = Math.floor(diff / 1000);
+        
+        if ( hours < 0 ) {
+            hours = hours + 24;
+        }
+        return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes + ":" + (seconds <= 9 ? "0" : "") + seconds;
+    }
+
+    convertToMinutes(hour) {
+        let hor = parseInt(hour.split(":")[0]) * 60;
+        let min = parseInt(hour.split(":")[1]);
+        return hor + min;
     }
 
     isOsPlatform() {

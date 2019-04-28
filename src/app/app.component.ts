@@ -19,6 +19,11 @@ export class AppComponent {
       title: 'PauseForMe',
       url: '/pause-for-me',
       icon: 'pause'
+    },
+    {
+      title: 'Notifications',
+      url: '/notification',
+      icon: 'notifications'
     }
   ];
 

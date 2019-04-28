@@ -5,7 +5,7 @@ $ npm i -g cordova ionic
 $ npm install
 $ ionic cordova prepare
 $ ### Step necessary when running on DevApp (iPhone/iPad) otherwise the Maps will not be loaded correctly
-$ ionic plugin add cordova-plugin-whitelist 
+$ ionic cordova plugin add cordova-plugin-whitelist 
 ```
 #### Plugins installed (when start the project from scratch, that's not needed to do when package.json is already mounted)
 ```shell

@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notifications</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="pageContent" class="background">
+    <div class="page-config">
+        <ion-list>
+            <ion-item-group>
+
+                <ion-list-header class="listHeader">
+                  <ion-grid class="headerSection">
+                    <ion-row class="vertical-align-content">
+                      <ion-col>
+                          <ion-label>
+                              <ion-thumbnail class="ion-thumbnailSize"><img src="assets/imgs/heading.png" class="imgThumbnailSize" style="width:80px;height:80px;margin-right: 10px;" ></ion-thumbnail>
+                          </ion-label>
+                      </ion-col>
+                      <ion-col>
+                          <ion-label style='font-weight:bolder;'>NAVAIDs</ion-label>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-list-header>
+
+                <!-- Airport -->
+                <ion-item lines="full">
+                    <ion-grid class="navaidsContainer">
+                        <ion-row class="vertical-align-content" style="margin-bottom: -15px;"> 
+                          <ion-col>
+                              Airport
+                          </ion-col>
+                          <ion-col  offset="6">
+                              <ion-toggle [(ngModel)]="alertAirport"></ion-toggle>
+                          </ion-col>
+                        </ion-row>
+                        <!-- [ngStyle]='!alertAirport&&{"background":"orange"}||{"background":"blue"}' -->
+                        <ion-row class="vertical-align-content">
+                          <ion-col [ngStyle]='!alertAirport&&{"display":"none !important;"}||{"display":"block !important"}'>
+                              <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
+                              <span class="labelValue">LEBL</span>&nbsp;
+                              <span class="labelValueCurrent">266 nm</span>&nbsp;
+                              <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp;
+                              <span class="labelValue">66 nm</span>
+                          </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </ion-item>
+
+                <!-- VOR -->
+                <ion-item lines="full">
+                    <ion-grid class="navaidsContainer">
+                        <ion-row class="vertical-align-content">
+                          <ion-col>
+                              VOR
+                          </ion-col>
+                          <ion-col  offset="6">
+                              <ion-toggle></ion-toggle>
+                          </ion-col>
+                        </ion-row>
+                        <!-- <ion-row class="vertical-align-content">
+                          <ion-col>
+                              <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
+                              <span class="labelValue">{{airportId}}</span>
+                          </ion-col>
+                        </ion-row> -->
+                    </ion-grid>
+                </ion-item>
+
+                <!-- NDB -->
+                <ion-item lines="full">
+                    <ion-grid class="navaidsContainer">
+                        <ion-row class="vertical-align-content">
+                          <ion-col>
+                              NDB
+                          </ion-col>
+                          <ion-col  offset="6">
+                              <ion-toggle></ion-toggle>
+                          </ion-col>
+                        </ion-row>
+                        <!-- <ion-row class="vertical-align-content">
+                          <ion-col>
+                              <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
+                              <span class="labelValue">{{airportId}}</span>
+                          </ion-col>
+                        </ion-row> -->
+                    </ion-grid>
+                </ion-item>
+
+
+            </ion-item-group>
+        </ion-list>      
+    </div>
+</ion-content>

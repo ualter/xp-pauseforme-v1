@@ -1,3 +1,4 @@
+import { MapService } from './../../services/map.service';
 import { XpWebSocketService } from './../../services/xp-websocket.service';
 import { UtilsService } from './../../services/utils.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -16,6 +17,7 @@ export class PauseForMePage implements OnInit, OnDestroy {
   MAX_DIST_NAVAID       = 999;
   STEP_NAVAID           = 1;
   ICON_SEPARATOR_NAVAID = "at";
+  COLOR_ICONS_SELECTION: string = "warning";
 
   timeImg:string;
   airportId:string   = "LEBL";
@@ -41,18 +43,30 @@ export class PauseForMePage implements OnInit, OnDestroy {
     upper:320,
     lower:150
   }
-  time = "22:10";
-  currentTime = "99:99";
+  time = "22:15:00";
+  currentTime = "99:99:99";
 
   currentAltitude:number = 0;
   currentAirspeed:number = 0;
+
+  airportSelected: boolean = false;
+  vorSelected: boolean = false;
+  ndbSelected: boolean = false;
+  fixSelected: boolean = false;
+  dmeSelected: boolean = false;
+
+  altitudeSelected: boolean = false;
+  airspeedSelected: boolean = false;
+  timeSelected: boolean = false;
+
 
   static reloj: number = 2;
 
   constructor(private xpWsSocket: XpWebSocketService, 
               private alertCtrl: AlertController,
               private utils: UtilsService,
-              private xpWebSocket: XpWebSocketService) {
+              private xpWebSocket: XpWebSocketService,
+              private mapService: MapService) {
 
     if ( PauseForMePage.reloj == 1 ) {
       PauseForMePage.reloj = 2;
@@ -62,24 +76,26 @@ export class PauseForMePage implements OnInit, OnDestroy {
     this.timeImg = "time" + PauseForMePage.reloj + ".png";
 
     if ( this.xpWebSocket.getLastMessageReceive() ) {
-      var json       = JSON.parse(this.xpWebSocket.getLastMessageReceive());
-      let pauseForMe = json.airplane.pauseforme;
+      var json = JSON.parse(this.xpWebSocket.getLastMessageReceive());
+      if ( json && json.airplane && json.airplane.pauseforme ) {
+          let pauseForMe = json.airplane.pauseforme;
 
-      this.altitudeKnobValues.lower = pauseForMe.altitude.min;
-      this.altitudeKnobValues.upper = pauseForMe.altitude.max;
-      this.airspeedKnobValues.lower = pauseForMe.speed.min;
-      this.airspeedKnobValues.upper = pauseForMe.speed.max;
-      this.airportId                = pauseForMe.navaid.config.id.airport;
-      this.vorId                    = pauseForMe.navaid.config.id.vor;
-      this.fixId                    = pauseForMe.navaid.config.id.fix;
-      this.ndbId                    = pauseForMe.navaid.config.id.ndb;
-      this.dmeId                    = pauseForMe.navaid.config.id.dme;
-      this.airportDist              = pauseForMe.navaid.userAirportDistance;
-      this.vorDist                  = pauseForMe.navaid.userVORDistance;
-      this.ndbDist                  = pauseForMe.navaid.userNDBDistance;
-      this.fixDist                  = pauseForMe.navaid.userFixDistance;
-      this.dmeDist                  = pauseForMe.navaid.userDMEDistance;
-      this.time                     = pauseForMe.timePause;
+          this.altitudeKnobValues.lower = pauseForMe.altitude.min;
+          this.altitudeKnobValues.upper = pauseForMe.altitude.max;
+          this.airspeedKnobValues.lower = pauseForMe.speed.min;
+          this.airspeedKnobValues.upper = pauseForMe.speed.max;
+          this.airportId                = pauseForMe.navaid.config.id.airport;
+          this.vorId                    = pauseForMe.navaid.config.id.vor;
+          this.fixId                    = pauseForMe.navaid.config.id.fix;
+          this.ndbId                    = pauseForMe.navaid.config.id.ndb;
+          this.dmeId                    = pauseForMe.navaid.config.id.dme;
+          this.airportDist              = pauseForMe.navaid.userAirportDistance;
+          this.vorDist                  = pauseForMe.navaid.userVORDistance;
+          this.ndbDist                  = pauseForMe.navaid.userNDBDistance;
+          this.fixDist                  = pauseForMe.navaid.userFixDistance;
+          this.dmeDist                  = pauseForMe.navaid.userDMEDistance;
+          this.time                     = pauseForMe.timePause;
+      }
     }
 
     if ( this.xpWebSocket.observable() ) {
@@ -95,6 +111,27 @@ export class PauseForMePage implements OnInit, OnDestroy {
               this.currentNdbDist     = json.airplane.pauseforme.navaid.config.distance.ndb;
               this.currentDmeDist     = json.airplane.pauseforme.navaid.config.distance.dme;
               this.currentTime        = this.utils.formatCurrentTime(json.airplane.time);
+
+              this.airportSelected = json.airplane.pauseforme.navaid.config.selected.airport == 1 ? true : false;
+              this.vorSelected     = json.airplane.pauseforme.navaid.config.selected.vor == 1 ? true : false;
+              this.ndbSelected     = json.airplane.pauseforme.navaid.config.selected.ndb == 1 ? true : false;
+              this.fixSelected     = json.airplane.pauseforme.navaid.config.selected.fix == 1 ? true : false;
+              this.dmeSelected     = json.airplane.pauseforme.navaid.config.selected.dme == 1 ? true : false;
+
+              this.altitudeSelected = json.airplane.pauseforme.altitude.selected == 1 ? true : false;
+              this.airspeedSelected = json.airplane.pauseforme.speed.selected    == 1 ? true : false;
+
+              this.timeSelected = json.airplane.pauseforme.timePauseSelected == 1 ? true : false;
+
+              console.log("| etaPauseByNavaIdAirport: " + this.mapService.etaPauseByNavaIdAirport);
+              console.log("| etaPauseByNavaIdVor: " + this.mapService.etaPauseByNavaIdVor);
+              console.log("| etaPauseByNavaIdNdb: " + this.mapService.etaPauseByNavaIdNdb);
+              console.log("| etaPauseByNavaIdFix: " + this.mapService.etaPauseByNavaIdFix);
+              console.log("| etaPauseByNavaIdDme: " + this.mapService.etaPauseByNavaIdDme);
+              console.log("* etaPauseByTime: " + this.mapService.etaPauseByTime);
+              console.log("--------------------------------");
+
+
             }
           },
           error => {
@@ -106,15 +143,6 @@ export class PauseForMePage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-  }
-
-  ionViewDidEnter() {
-    /* console.log('ionViewWillEnter');
-    let elIonContent = document.getElementsByTagName("ion-content")[0];
-    console.log(elIonContent);
-    let elMainDiv    = elIonContent.shadowRoot.querySelector("div");
-    console.log(elMainDiv);
-    (<Element>elMainDiv).setAttribute('style',"background-image: url('assets/imgs/background_1.png');"); */
   }
 
   ngOnDestroy() {

@@ -63,3 +63,57 @@
     height: 30px;
     width: 30px;
 }
+
+.ion-thumbnailSize {
+    min-width: 35px !important;
+    min-height: 35px !important;
+    display: inline !important;
+ }
+
+ .imgThumbnailSize {
+	width: 35px;
+	height: 35px;
+}
+
+.listHeader {
+	justify-content: end;
+}
+
+.valueInHeader {
+	color: blue;
+}
+
+.vertical-align-content
+{
+	display: flex!important;
+	align-content: center!important;
+	align-items: center!important;
+}
+.labelValue {
+   font-weight: bold;
+   color: blue;
+}
+.labelValueMin {
+   font-weight: bold;
+   color: red;
+}
+.labelValueCurrent {
+   font-weight: bold;
+   color: black;
+}
+
+ion-item-divider.config {
+    padding-bottom: 3px;
+    background-color: #F2F2F2;
+}
+ion-list-header.padding {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+@media (min-width:480px) and (max-width:649px) { // this rule will only trigger if screen width is above 820x,
+    ion-content.background {
+        --background: var(--pauseform-background);
+    }
+}
