@@ -34,3 +34,14 @@ ion-list-header.padding {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
+.rowUnvisible {
+    display: none !important;
+}
+.rowVisible {
+    display: block !important;
+}
+
+ion-row.padding-bottom {
+    padding-bottom: 10px;
+}

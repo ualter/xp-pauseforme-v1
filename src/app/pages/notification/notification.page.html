@@ -38,9 +38,8 @@
                               <ion-toggle [(ngModel)]="alertAirport"></ion-toggle>
                           </ion-col>
                         </ion-row>
-                        <!-- [ngStyle]='!alertAirport&&{"background":"orange"}||{"background":"blue"}' -->
-                        <ion-row class="vertical-align-content">
-                          <ion-col [ngStyle]='!alertAirport&&{"display":"none !important;"}||{"display":"block !important"}'>
+                        <ion-row class="vertical-align-content padding-bottom" [ngClass]="!alertAirport ? 'rowUnvisible' : 'rowVisible'">
+                          <ion-col>
                               <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
                               <span class="labelValue">LEBL</span>&nbsp;
                               <span class="labelValueCurrent">266 nm</span>&nbsp;
@@ -62,12 +61,6 @@
                               <ion-toggle></ion-toggle>
                           </ion-col>
                         </ion-row>
-                        <!-- <ion-row class="vertical-align-content">
-                          <ion-col>
-                              <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
-                              <span class="labelValue">{{airportId}}</span>
-                          </ion-col>
-                        </ion-row> -->
                     </ion-grid>
                 </ion-item>
 
