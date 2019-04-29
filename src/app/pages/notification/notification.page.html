@@ -30,7 +30,7 @@
                 <!-- Airport -->
                 <ion-item lines="full">
                     <ion-grid class="navaidsContainer">
-                        <ion-row class="vertical-align-content" style="margin-bottom: -15px;"> 
+                        <ion-row class="vertical-align-content" [ngClass]="!alertAirport ? 'rowHeaderDetailsUnvisible' : 'rowHeaderDetailsVisible'"> 
                           <ion-col>
                               Airport
                           </ion-col>
@@ -38,13 +38,20 @@
                               <ion-toggle [(ngModel)]="alertAirport"></ion-toggle>
                           </ion-col>
                         </ion-row>
-                        <ion-row class="vertical-align-content padding-bottom" [ngClass]="!alertAirport ? 'rowUnvisible' : 'rowVisible'">
+                        <ion-row class="vertical-align-content" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                           <ion-col>
                               <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
                               <span class="labelValue">LEBL</span>&nbsp;
-                              <span class="labelValueCurrent">266 nm</span>&nbsp;
+                              <span class="labelValue">266 nm</span>&nbsp;
                               <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp;
                               <span class="labelValue">66 nm</span>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row class="vertical-align-content padding-bottom" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'" style="padding-top:4px;">
+                          <ion-col>
+                              <span><i class="fas fa-pause"></i></span>&nbsp;
+                              <span class="labelValueCurrent">Estimated at</span>&nbsp;
+                              <span class="labelValue">01:43:52</span>&nbsp;
                           </ion-col>
                         </ion-row>
                     </ion-grid>

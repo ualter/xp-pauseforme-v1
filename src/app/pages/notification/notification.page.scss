@@ -35,10 +35,16 @@ ion-list-header.padding {
     padding-bottom: 20px;
 }
 
-.rowUnvisible {
+.rowHeaderDetailsUnvisible {
+    //
+}
+.rowHeaderDetailsVisible {
+    margin-bottom: -10px;
+}
+.rowDetailsUnvisible {
     display: none !important;
 }
-.rowVisible {
+.rowDetailsVisible {
     display: block !important;
 }
 
