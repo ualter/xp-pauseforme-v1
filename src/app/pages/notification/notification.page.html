@@ -38,7 +38,7 @@
                               <ion-toggle [(ngModel)]="alertAirport"></ion-toggle>
                           </ion-col>
                         </ion-row>
-                        <ion-row class="vertical-align-content" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
+                        <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                           <ion-col>
                               <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
                               <span class="labelValue">LEBL</span>&nbsp;
@@ -47,11 +47,19 @@
                               <span class="labelValue">66 nm</span>
                           </ion-col>
                         </ion-row>
-                        <ion-row class="vertical-align-content padding-bottom" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'" style="padding-top:4px;">
+                        <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                           <ion-col>
                               <span><i class="fas fa-pause"></i></span>&nbsp;
                               <span class="labelValueCurrent">Estimated at</span>&nbsp;
                               <span class="labelValue">01:43:52</span>&nbsp;
+                          </ion-col>
+                        </ion-row>
+                        <ion-row class="vertical-align-content padding-bottom-lastline" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
+                          <ion-col>
+                              <span><i class="fas fa-bell"></i></span>&nbsp;
+                              <span class="labelValueCurrent">Alert at</span>&nbsp;
+                              <span class="labelValue" (click)="openPicker()">03 Minutes</span>&nbsp;
+                              <span class="labelValueCurrent">before</span>&nbsp;
                           </ion-col>
                         </ion-row>
                     </ion-grid>

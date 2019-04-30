@@ -48,6 +48,9 @@ ion-list-header.padding {
     display: block !important;
 }
 
-ion-row.padding-bottom {
-    padding-bottom: 10px;
+ion-row.padding-bottom-middleline {
+    padding-bottom: 3px;
+}
+ion-row.padding-bottom-lastline {
+    padding-bottom: 12px;
 }
