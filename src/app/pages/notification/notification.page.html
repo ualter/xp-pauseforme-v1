@@ -43,7 +43,8 @@
                               <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
                               <span class="labelValue">LEBL</span>&nbsp;
                               <span class="labelValue">266 nm</span>&nbsp;
-                              <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp;
+                              <!-- <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp; -->
+                              <span style="font-size:16px;font-weight: bold"><i class="fas fa-less-than-equal"></i></span>&nbsp;
                               <span class="labelValue">66 nm</span>
                           </ion-col>
                         </ion-row>
@@ -58,9 +59,8 @@
                           <ion-col>
                               <span><i class="fas fa-bell"></i></span>&nbsp;
                               <span class="labelValueCurrent">Alert</span>&nbsp;
-                              <ion-button (click)="openPickerMinutes()" color="primary" style="margin-top: -7px;">03 {{labelMinutes}}</ion-button><span class="labelValueCurrent">:</span>
-                              <!-- <ion-button (click)="openPickerSeconds()" color="primary" style="margin-top: -7px;">00 {{labelSeconds}}</ion-button>&nbsp; -->
-                              <ion-datetime #secondPicker display-format="mm:ss" class="ion-color ion-color-primary ios button button-solid ion-activatable ion-focusable hydrated button-small" [(ngModel)]="time" style="display: inline-flex; margin-left: -15px;" [minuteValues]="minuteValues" >00 {{labelSeconds}}</ion-datetime>&nbsp;
+                              <i class="fas fa-arrow-alt-circle-right"></i>&nbsp;
+                              <ion-datetime id="minSecPicker" display-format="mm:ss" [(ngModel)]="time" style="display: inline-flex; margin:-15px -8px -0px -18px;" [minuteValues]="minuteValues" (ionChange)="minuteSecondChanged()"></ion-datetime>{{units}}
                               <span class="labelValueCurrent">before</span>&nbsp;
                           </ion-col>
                         </ion-row>

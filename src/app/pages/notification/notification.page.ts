@@ -25,92 +25,41 @@ export class NotificationPage implements OnInit {
 
   alertAirport: boolean = true;
 
-  optionsMinutes: any = [];
-  optionsSeconds: any = [];
-
   labelMinutes: string = "Minutes";
   labelSeconds: string = "Seconds";
 
-  time = "22:15:00";
+  time = "00:02:30";
   minuteValues:string = "0,1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55";
-
-  @ViewChild('secondPicker') secondPicker;
-  open() {
-    this.secondPicker.open();
-  }
+  units = " minutes";
 
   constructor(
     private platform: Platform,
     private pickerCtrl: PickerController) { 
 
-      for(let i = 1; i < 60; i++) {
-        this.optionsMinutes.push({"text":i,"value":i});
-      }
-      for(let i = 1; i < 59; i++) {
-        this.optionsSeconds.push({"text":i,"value":i});
-      }
-
-      console.log("Is iPhone: " + platform.is("iphone"));
       if ( platform.is("iphone") ) {
         this.labelMinutes = "Min";
         this.labelSeconds = "Sec";
       }
+
+      this.platform.ready().then(() => {
+      });
   }
-
-  op
-
-  async openPickerMinutes() {
-      const picker = await this.pickerCtrl.create({
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: (d) => {
-          }
-        },
-        {
-          text: 'Confirm',
-          handler: (d) => {
-            console.log(d);
-          }
-        }
-      ],
-      columns: [
-        {
-          name: 'Minutes',
-          options: this.optionsMinutes
-        },
-      ]
-    });
-    await picker.present();
-  }
-
-  async openPickerSeconds() {
-    const picker = await this.pickerCtrl.create({
-    buttons: [
-      {
-        text: 'Cancel',
-        handler: (d) => {
-        }
-      },
-      {
-        text: 'Confirm',
-        handler: (d) => {
-          console.log(d);
-        }
-      }
-    ],
-    columns: [
-      {
-        name: 'Seconds',
-        options: this.optionsSeconds
-      },
-    ]
-  });
-  await picker.present();
-}
 
   ngOnInit() {
-    
   }
+
+  minuteSecondChanged() {
+    let min = this.time.split(":")[1];
+    let sec = this.time.split(":")[2];
+    if ( parseInt(min) == 0 ) {
+      this.units = " seconds";
+    } else 
+    if ( parseInt(min) == 1 ) {
+      this.units = " minute";
+    } else {
+      this.units = " minutes";
+    }
+  }
+  
 
 }
