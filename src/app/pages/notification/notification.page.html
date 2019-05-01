@@ -50,15 +50,17 @@
                         <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                           <ion-col>
                               <span><i class="fas fa-pause"></i></span>&nbsp;
-                              <span class="labelValueCurrent">Estimated at</span>&nbsp;
+                              <span class="labelValueCurrent">Estimated</span>&nbsp;
                               <span class="labelValue">01:43:52</span>&nbsp;
                           </ion-col>
                         </ion-row>
                         <ion-row class="vertical-align-content padding-bottom-lastline" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                           <ion-col>
                               <span><i class="fas fa-bell"></i></span>&nbsp;
-                              <span class="labelValueCurrent">Alert at</span>&nbsp;
-                              <span class="labelValue" (click)="openPicker()">03 Minutes</span>&nbsp;
+                              <span class="labelValueCurrent">Alert</span>&nbsp;
+                              <ion-button (click)="openPickerMinutes()" color="primary" style="margin-top: -7px;">03 {{labelMinutes}}</ion-button><span class="labelValueCurrent">:</span>
+                              <!-- <ion-button (click)="openPickerSeconds()" color="primary" style="margin-top: -7px;">00 {{labelSeconds}}</ion-button>&nbsp; -->
+                              <ion-datetime #secondPicker display-format="mm:ss" class="ion-color ion-color-primary ios button button-solid ion-activatable ion-focusable hydrated button-small" [(ngModel)]="time" style="display: inline-flex; margin-left: -15px;" [minuteValues]="minuteValues" >00 {{labelSeconds}}</ion-datetime>&nbsp;
                               <span class="labelValueCurrent">before</span>&nbsp;
                           </ion-col>
                         </ion-row>

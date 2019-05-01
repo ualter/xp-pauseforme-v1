@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PickerController, Platform } from '@ionic/angular';
 
 
@@ -25,64 +25,89 @@ export class NotificationPage implements OnInit {
 
   alertAirport: boolean = true;
 
-  
+  optionsMinutes: any = [];
+  optionsSeconds: any = [];
 
-  optionsMinutes: any = [
-    {text: '1992',value: 1992},
-    {text: '1993',value: 1992},
-    {text: '2010',value: 2010},
-  ];
+  labelMinutes: string = "Minutes";
+  labelSeconds: string = "Seconds";
 
-  optionsSeconds: any = [
-    {text: '1',value: 1},
-    {text: '2',value: 1},
-    {text: '3',value: 3},
-    {text: '4',value: 4},
-    {text: '5',value: 5},
-    {text: '6',value: 6},
-  ];
+  time = "22:15:00";
+  minuteValues:string = "0,1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55";
 
-  options = this.optionsSeconds;
-  
+  @ViewChild('secondPicker') secondPicker;
+  open() {
+    this.secondPicker.open();
+  }
+
   constructor(
     private platform: Platform,
     private pickerCtrl: PickerController) { 
 
-      this.platform.ready().then(() => {
-      });
+      for(let i = 1; i < 60; i++) {
+        this.optionsMinutes.push({"text":i,"value":i});
+      }
+      for(let i = 1; i < 59; i++) {
+        this.optionsSeconds.push({"text":i,"value":i});
+      }
+
+      console.log("Is iPhone: " + platform.is("iphone"));
+      if ( platform.is("iphone") ) {
+        this.labelMinutes = "Min";
+        this.labelSeconds = "Sec";
+      }
   }
 
-  async openPicker() {
+  op
+
+  async openPickerMinutes() {
       const picker = await this.pickerCtrl.create({
-      buttons: [{
-        text: 'Done',
-        handler: (d) => {
-          console.log(d);
-        }
-      }],
-      columns: [
+      buttons: [
         {
-          name: 'unit',
-          options: [
-            {text: 'Seconds',value: 1},
-            {text: 'Minutes',value: 2},
-          ]
+          text: 'Cancel',
+          handler: (d) => {
+          }
         },
         {
-          name: 'qtde',
-          options: this.options
+          text: 'Confirm',
+          handler: (d) => {
+            console.log(d);
+          }
+        }
+      ],
+      columns: [
+        {
+          name: 'Minutes',
+          options: this.optionsMinutes
         },
       ]
     });
     await picker.present();
-
-    let ele = document.getElementsByTagName("ion-picker-column")[0];
-    console.log(ele.querySelector(".picker-opt-selected").firstChild);
-
-    this.options = this.optionsMinutes;
-
-    //console.log((el<HTMLElement>).shadowRoot.querySelector(".picker-opt-selected"));
   }
+
+  async openPickerSeconds() {
+    const picker = await this.pickerCtrl.create({
+    buttons: [
+      {
+        text: 'Cancel',
+        handler: (d) => {
+        }
+      },
+      {
+        text: 'Confirm',
+        handler: (d) => {
+          console.log(d);
+        }
+      }
+    ],
+    columns: [
+      {
+        name: 'Seconds',
+        options: this.optionsSeconds
+      },
+    ]
+  });
+  await picker.present();
+}
 
   ngOnInit() {
     
