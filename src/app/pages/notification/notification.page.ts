@@ -88,10 +88,10 @@ export class NotificationPage implements OnInit {
         }
       ];
 
-      this.getAll();
-      this.initialStateAlert[1] = true;
+      //this.getAll();
+      //this.initialStateAlert[1] = true;
 
-      this.platform.ready().then(() => {
+      /* this.platform.ready().then(() => {
         // Local Notifications Events
         // Events Supported: add, trigger, click, clear, cancel, update, clearall and cancelall
         this.localNotifications.on('click').subscribe(res => {
@@ -100,7 +100,7 @@ export class NotificationPage implements OnInit {
         this.localNotifications.on('trigger').subscribe(res => {
           let msg = res.data ? 'TRIGGER -> ' + res.data.mydata : 'TRIGGER -> Not Found mydata object';
         });
-      });
+      }); */
 
       if ( this.xpWsSocket.observable() ) {
         this.xpWsSocket.observable().subscribe(
@@ -108,39 +108,39 @@ export class NotificationPage implements OnInit {
               var json = JSON.parse(payload.data);
               if ( json.airplane ) {
 
-                this.alertLines[0].alert          = json.airplane.pauseforme.navaId.config.selected.airport;
-                this.alertLines[0].userSelected   = json.airplane.pauseforme.navaId.config.selected.airport;
-                this.alertLines[0].navaId         = json.airplane.pauseforme.navaId.config.id.airport;
-                this.alertLines[0].distance       = json.airplane.pauseforme.navaId.config.distance.airport;
-                this.alertLines[0].userDistance   = json.airplane.pauseforme.navaId.userAirportDistance;
+                this.alertLines[0].alert          = json.airplane.pauseforme.navaid.config.selected.airport;
+                this.alertLines[0].userSelected   = json.airplane.pauseforme.navaid.config.selected.airport;
+                this.alertLines[0].navaId         = json.airplane.pauseforme.navaid.config.id.airport;
+                this.alertLines[0].distance       = json.airplane.pauseforme.navaid.config.distance.airport;
+                this.alertLines[0].userDistance   = json.airplane.pauseforme.navaid.userAirportDistance;
                 this.alertLines[0].estimatedPause = this.mapService.etaPauseByNavaIdAirport;
 
-                this.alertLines[1].alert          = json.airplane.pauseforme.navaId.config.selected.vor;
-                this.alertLines[1].userSelected   = json.airplane.pauseforme.navaId.config.selected.vor;
-                this.alertLines[1].navaId         = json.airplane.pauseforme.navaId.config.id.vor;
-                this.alertLines[1].distance       = json.airplane.pauseforme.navaId.config.distance.vor;
-                this.alertLines[1].userDistance   = json.airplane.pauseforme.navaId.userVORDistance;
+                this.alertLines[1].alert          = json.airplane.pauseforme.navaid.config.selected.vor;
+                this.alertLines[1].userSelected   = json.airplane.pauseforme.navaid.config.selected.vor;
+                this.alertLines[1].navaId         = json.airplane.pauseforme.navaid.config.id.vor;
+                this.alertLines[1].distance       = json.airplane.pauseforme.navaid.config.distance.vor;
+                this.alertLines[1].userDistance   = json.airplane.pauseforme.navaid.userVORDistance;
                 this.alertLines[1].estimatedPause = this.mapService.etaPauseByNavaIdVor;
 
-                this.alertLines[2].alert          = json.airplane.pauseforme.navaId.config.selected.ndb;
-                this.alertLines[2].userSelected   = json.airplane.pauseforme.navaId.config.selected.ndb;
-                this.alertLines[2].navaId         = json.airplane.pauseforme.navaId.config.id.ndb;
-                this.alertLines[2].distance       = json.airplane.pauseforme.navaId.config.distance.ndb;
-                this.alertLines[2].userDistance   = json.airplane.pauseforme.navaId.userNDBDistance;
+                this.alertLines[2].alert          = json.airplane.pauseforme.navaid.config.selected.ndb;
+                this.alertLines[2].userSelected   = json.airplane.pauseforme.navaid.config.selected.ndb;
+                this.alertLines[2].navaId         = json.airplane.pauseforme.navaid.config.id.ndb;
+                this.alertLines[2].distance       = json.airplane.pauseforme.navaid.config.distance.ndb;
+                this.alertLines[2].userDistance   = json.airplane.pauseforme.navaid.userNDBDistance;
                 this.alertLines[2].estimatedPause = this.mapService.etaPauseByNavaIdNdb;
 
-                this.alertLines[3].alert          = json.airplane.pauseforme.navaId.config.selected.fix;
-                this.alertLines[3].userSelected   = json.airplane.pauseforme.navaId.config.selected.fix;
-                this.alertLines[3].navaId         = json.airplane.pauseforme.navaId.config.id.fix;
-                this.alertLines[3].distance       = json.airplane.pauseforme.navaId.config.distance.fix;
-                this.alertLines[3].userDistance   = json.airplane.pauseforme.navaId.userFixDistance;
+                this.alertLines[3].alert          = json.airplane.pauseforme.navaid.config.selected.fix;
+                this.alertLines[3].userSelected   = json.airplane.pauseforme.navaid.config.selected.fix;
+                this.alertLines[3].navaId         = json.airplane.pauseforme.navaid.config.id.fix;
+                this.alertLines[3].distance       = json.airplane.pauseforme.navaid.config.distance.fix;
+                this.alertLines[3].userDistance   = json.airplane.pauseforme.navaid.userFixDistance;
                 this.alertLines[3].estimatedPause = this.mapService.etaPauseByNavaIdFix;
 
-                this.alertLines[4].alert          = json.airplane.pauseforme.navaId.config.selected.dme;
-                this.alertLines[4].userSelected   = json.airplane.pauseforme.navaId.config.selected.dme;
-                this.alertLines[4].navaId         = json.airplane.pauseforme.navaId.config.id.dme;
-                this.alertLines[4].distance       = json.airplane.pauseforme.navaId.config.distance.dme;
-                this.alertLines[4].userDistance   = json.airplane.pauseforme.navaId.userDMEDistance;
+                this.alertLines[4].alert          = json.airplane.pauseforme.navaid.config.selected.dme;
+                this.alertLines[4].userSelected   = json.airplane.pauseforme.navaid.config.selected.dme;
+                this.alertLines[4].navaId         = json.airplane.pauseforme.navaid.config.id.dme;
+                this.alertLines[4].distance       = json.airplane.pauseforme.navaid.config.distance.dme;
+                this.alertLines[4].userDistance   = json.airplane.pauseforme.navaid.userDMEDistance;
                 this.alertLines[4].estimatedPause = this.mapService.etaPauseByNavaIdDme;
               }
             },
@@ -168,7 +168,7 @@ export class NotificationPage implements OnInit {
     }
     
     // Remove the previous and create the new with the new values
-    this.localNotifications.cancel(line.id);
+    this.cancelAlert(line);
     // Recreate the Alert (update)
     this.createAlert(line);
   }
@@ -218,7 +218,7 @@ export class NotificationPage implements OnInit {
         this.createAlert(line);
       } else {
       // If the state Alert is now OFF, delete the LocalNotification  
-        this.localNotifications.cancel(line.id);
+        this.cancelAlert(line);
       }
     }
   }
@@ -227,6 +227,11 @@ export class NotificationPage implements OnInit {
     this.localNotifications.getAll().then((res: ILocalNotification[]) => {
       this.scheduled = res;
     })
+  }
+
+  cancelAlert(line) {
+    console.log("Canceled Alert for " + line.id);
+    //this.localNotifications.cancel(line.id);
   }
   
 
