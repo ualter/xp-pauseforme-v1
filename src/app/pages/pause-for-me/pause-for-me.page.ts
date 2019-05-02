@@ -65,7 +65,6 @@ export class PauseForMePage implements OnInit, OnDestroy {
   constructor(private xpWsSocket: XpWebSocketService, 
               private alertCtrl: AlertController,
               private utils: UtilsService,
-              private xpWebSocket: XpWebSocketService,
               private mapService: MapService) {
 
     if ( PauseForMePage.reloj == 1 ) {
@@ -75,8 +74,8 @@ export class PauseForMePage implements OnInit, OnDestroy {
     }
     this.timeImg = "time" + PauseForMePage.reloj + ".png";
 
-    if ( this.xpWebSocket.getLastMessageReceive() ) {
-      var json = JSON.parse(this.xpWebSocket.getLastMessageReceive());
+    if ( this.xpWsSocket.getLastMessageReceive() ) {
+      var json = JSON.parse(this.xpWsSocket.getLastMessageReceive());
       if ( json && json.airplane && json.airplane.pauseforme ) {
           let pauseForMe = json.airplane.pauseforme;
 
@@ -98,7 +97,7 @@ export class PauseForMePage implements OnInit, OnDestroy {
       }
     }
 
-    if ( this.xpWebSocket.observable() ) {
+    if ( this.xpWsSocket.observable() ) {
       this.xpWsSocket.observable().subscribe(
           payload => {
             var json = JSON.parse(payload.data);

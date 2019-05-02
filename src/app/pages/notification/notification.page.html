@@ -27,80 +27,44 @@
                   </ion-grid>
                 </ion-list-header>
 
-                <!-- Airport -->
-                <ion-item lines="full">
-                    <ion-grid class="navaidsContainer">
-                        <ion-row class="vertical-align-content" [ngClass]="!alertAirport ? 'rowHeaderDetailsUnvisible' : 'rowHeaderDetailsVisible'"> 
-                          <ion-col>
-                              Airport
-                          </ion-col>
-                          <ion-col  offset="6">
-                              <ion-toggle [(ngModel)]="alertAirport"></ion-toggle>
-                          </ion-col>
-                        </ion-row>
-                        <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
-                          <ion-col>
-                              <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
-                              <span class="labelValue">LEBL</span>&nbsp;
-                              <span class="labelValue">266 nm</span>&nbsp;
-                              <!-- <span style="font-size:16px;font-weight: bold">&#x2264;</span>&nbsp; -->
-                              <span style="font-size:16px;font-weight: bold"><i class="fas fa-less-than-equal"></i></span>&nbsp;
-                              <span class="labelValue">66 nm</span>
-                          </ion-col>
-                        </ion-row>
-                        <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
-                          <ion-col>
-                              <span><i class="fas fa-pause"></i></span>&nbsp;
-                              <span class="labelValueCurrent">Estimated</span>&nbsp;
-                              <span class="labelValue">01:43:52</span>&nbsp;
-                          </ion-col>
-                        </ion-row>
-                        <ion-row class="vertical-align-content padding-bottom-lastline" [ngClass]="!alertAirport ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
-                          <ion-col>
-                              <span><i class="fas fa-bell"></i></span>&nbsp;
-                              <span class="labelValueCurrent">Alert</span>&nbsp;
-                              <i class="fas fa-arrow-alt-circle-right"></i>&nbsp;
-                              <ion-datetime id="minSecPicker" display-format="mm:ss" [(ngModel)]="time" style="display: inline-flex; margin:-15px -8px -0px -18px;" [minuteValues]="minuteValues" (ionChange)="minuteSecondChanged()"></ion-datetime>{{units}}
-                              <span class="labelValueCurrent">before</span>&nbsp;
-                          </ion-col>
-                        </ion-row>
-                    </ion-grid>
+                <!-- Lines of Alert, sequenced: Airport, VOR, NDB, FIX and DME -->
+                <ion-item lines="full" *ngFor="let line of alertLines; let i = index">
+                  <ion-grid class="navaidsContainer">
+                    <ion-row class="vertical-align-content" [ngClass]="!line.alert ? 'rowHeaderDetailsUnvisible' : 'rowHeaderDetailsVisible'"> 
+                      <ion-col>
+                          {{line.id}}
+                      </ion-col>
+                      <ion-col  offset="6">
+                          <ion-toggle [(ngModel)]="line.alert" (ionChange)="alertChanged(i)"></ion-toggle>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!line.alert ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
+                      <ion-col>
+                          <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!line.userSelected"></ion-icon>
+                          <span class="labelValue">{{line.navaId}}</span>&nbsp;
+                          <span class="labelValue">{{line.distance}}nm</span>&nbsp;
+                          <span style="font-size:16px;font-weight: bold"><i class="fas fa-less-than-equal"></i></span>&nbsp;
+                          <span class="labelValue">{{line.userDistance}}nm</span>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!line.alert ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
+                      <ion-col>
+                          <span><i class="fas fa-pause"></i></span>&nbsp;
+                          <span class="labelValueCurrent">Estimated</span>&nbsp;
+                          <span class="labelValue">{{line.estimatedPause}}</span>&nbsp;
+                      </ion-col>
+                    </ion-row>
+                    <ion-row class="vertical-align-content padding-bottom-lastline" [ngClass]="!line.alert ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
+                      <ion-col>
+                          <span><i class="fas fa-bell"></i></span>&nbsp;
+                          <span class="labelValueCurrent">Alert</span>&nbsp;
+                          <i class="fas fa-arrow-alt-circle-right"></i>&nbsp;
+                          <ion-datetime id="minSecPicker" display-format="mm:ss" [(ngModel)]="line.timeToPause" style="display: inline-flex; margin:-15px -8px -0px -18px;" [minuteValues]="minuteValues" (ionChange)="minuteSecondChanged(i)"></ion-datetime>{{line.units}}
+                          <span class="labelValueCurrent">before</span>&nbsp;
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
                 </ion-item>
-
-                <!-- VOR -->
-                <ion-item lines="full">
-                    <ion-grid class="navaidsContainer">
-                        <ion-row class="vertical-align-content">
-                          <ion-col>
-                              VOR
-                          </ion-col>
-                          <ion-col  offset="6">
-                              <ion-toggle></ion-toggle>
-                          </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-item>
-
-                <!-- NDB -->
-                <ion-item lines="full">
-                    <ion-grid class="navaidsContainer">
-                        <ion-row class="vertical-align-content">
-                          <ion-col>
-                              NDB
-                          </ion-col>
-                          <ion-col  offset="6">
-                              <ion-toggle></ion-toggle>
-                          </ion-col>
-                        </ion-row>
-                        <!-- <ion-row class="vertical-align-content">
-                          <ion-col>
-                              <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!airportSelected"></ion-icon>
-                              <span class="labelValue">{{airportId}}</span>
-                          </ion-col>
-                        </ion-row> -->
-                    </ion-grid>
-                </ion-item>
-
 
             </ion-item-group>
         </ion-list>      
