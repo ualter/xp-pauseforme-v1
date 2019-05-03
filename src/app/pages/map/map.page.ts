@@ -12,7 +12,8 @@ import { XpWebSocketService } from '../../services/xp-websocket.service';
 import { RouterService } from '../../services/router.service';
 import { FlightPlanService } from '../../services/flight-plan.service';
 import { AirplaneService, AirplaneCategorySize } from '../../services/airplane.service';
-import { isUndefined } from 'util';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 const MAX_ZOOM          = 15;
 const ZOOM_PAN_OPTIONS  = {animate: true, duration: 0.25, easeLinearity: 1.0, noMoveStart: false}; 
@@ -173,7 +174,9 @@ export class MapPage implements OnInit {
     private router: RouterService,
     private flightPlanService: FlightPlanService,
     private platform: Platform,
-    private mapService: MapService) {
+    private backgroundMode: BackgroundMode,
+    private mapService: MapService,
+    private screenOrientation: ScreenOrientation) {
 
       staticXPlaneWsServer  = xpWsSocket;
       staticAlertController = alertCtrl;
@@ -214,6 +217,14 @@ export class MapPage implements OnInit {
              this.checkZoomLevelChangesOnMap(true);
         }
       });
+
+      /* this.screenOrientation.onChange().subscribe(() => {
+          console.log("Orientation Changed");
+          map.invalidateSize(ZOOM_PAN_OPTIONS);
+        }
+      );
+
+      this.backgroundMode.enable(); */
   }
 
   ngOnInit() {
