@@ -153,8 +153,8 @@ export class MapPage implements OnInit {
   private connectionState:number = State.DISCONNECTED;
 
   // tslint:disable-next-line
-  private connectMeDisable:boolean = false;
-  private connectMeState:boolean = false;
+  public connectMeDisable:boolean = false;
+  public connectMeState:boolean = false;
   private xplaneAddress: string;
   private xplanePort: string;
 
