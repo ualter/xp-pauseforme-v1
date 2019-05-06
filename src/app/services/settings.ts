@@ -1,6 +1,6 @@
 
 
-export class Settings {
+export class settings {
 
     xplaneAddress: string;
     xplanePort: string;

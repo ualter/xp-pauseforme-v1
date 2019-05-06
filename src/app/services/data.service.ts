@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { Settings, IFlightPlan } from './Settings'
+import { settings, IFlightPlan } from './settings'
 import { Storage } from '@ionic/storage';
 import { UtilsService } from "./utils.service";
 
@@ -9,18 +9,18 @@ import { UtilsService } from "./utils.service";
 })
 export class DataService {
 
-  private settingsSource: BehaviorSubject<Settings>;
-    settings: Settings;
-    currentSettings: Observable<Settings>
+  private settingsSource: BehaviorSubject<settings>;
+    settings: settings;
+    currentSettings: Observable<settings>
 
     constructor(private storage: Storage, private utils: UtilsService) {
-        this.settings                    = new Settings();
+        this.settings                    = new settings();
         this.settings.xplaneAddress      = '127.0.0.1';
         this.settings.xplanePort         = '9002';
         this.settings.name               = 'UALTER Desktop';
         this.settings.airplaneId         = 'a320';
 
-        this.settingsSource = new BehaviorSubject<Settings>(this.settings);
+        this.settingsSource = new BehaviorSubject<settings>(this.settings);
         this.currentSettings = this.settingsSource.asObservable();
 
         // Asynchronously check database if there is already an object saved before, 
