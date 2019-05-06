@@ -217,14 +217,6 @@ export class MapPage implements OnInit {
              this.checkZoomLevelChangesOnMap(true);
         }
       });
-
-      /* this.screenOrientation.onChange().subscribe(() => {
-          console.log("Orientation Changed");
-          map.invalidateSize(ZOOM_PAN_OPTIONS);
-        }
-      );
-
-      this.backgroundMode.enable(); */
   }
 
   ngOnInit() {
@@ -236,9 +228,17 @@ export class MapPage implements OnInit {
     $(document).ready(function(){
       //console.log('JQuery is working!!');
     });
+
     setTimeout(function () {
       map.invalidateSize(ZOOM_PAN_OPTIONS);
     }, 0);
+
+    this.screenOrientation.onChange().subscribe( () => {
+        map.invalidateSize(ZOOM_PAN_OPTIONS);
+      }
+    );
+
+    this.backgroundMode.enable();
   }
 
   ionViewDidEnter() {
