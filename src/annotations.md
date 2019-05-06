@@ -13,6 +13,7 @@ $ npm install @ionic/storage --save
 $ npm install leaflet --save   
 $ npm install @angular/animations --save
 $ npm install @ionic-angular --save
+$ ionic cordova plugin add cordova-plugin-geolocation
 $ npm install @ionic-native/geolocation --save
 $ ionic plugin add cordova-plugin-whitelist
 $ npm install leaflet-touch-helper --save
