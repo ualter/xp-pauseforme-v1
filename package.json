@@ -93,6 +93,8 @@
       "cordova-plugin-screen-orientation": {},
       "cordova-plugin-geolocation": {}
     },
-    "platforms": []
+    "platforms": [
+      "ios"
+    ]
   }
 }

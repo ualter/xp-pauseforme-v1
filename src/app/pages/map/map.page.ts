@@ -222,6 +222,16 @@ export class MapPage implements OnInit {
   ngOnInit() {
     this.loadMap();
     this.getSetUserPosition();
+
+    window.addEventListener("orientationchange", function(){
+      setTimeout(function () {
+        console.log("(500ms)Invalidate Size Map");
+        map.invalidateSize(0);
+        map.setView([latitude, longitude], MAX_ZOOM - 5);
+      }, 500);
+    });
+
+    this.backgroundMode.enable();
   }
 
   ngAfterViewInit(){
@@ -232,13 +242,6 @@ export class MapPage implements OnInit {
     setTimeout(function () {
       map.invalidateSize(ZOOM_PAN_OPTIONS);
     }, 0);
-
-    this.screenOrientation.onChange().subscribe( () => {
-        map.invalidateSize(ZOOM_PAN_OPTIONS);
-      }
-    );
-
-    this.backgroundMode.enable();
   }
 
   ionViewDidEnter() {
@@ -582,7 +585,8 @@ export class MapPage implements OnInit {
           layers: [standardTile], 
           minZoom: 3,
           maxZoom: MAX_ZOOM,
-          zoomControl:false
+          zoomControl:false,
+          trackResize: true
         }
     ).setView([41.5497, 2.0989], MAX_ZOOM - 5);
 
@@ -735,6 +739,7 @@ export class MapPage implements OnInit {
       MapPage.myself.utils.warn("Latitude were NaN, set to " + DEFAULT_LATITUDE);
       userLatitude = DEFAULT_LATITUDE;
     }
+
     map.flyTo({lon: userLongitude, lat: userLatitude}, MAX_ZOOM - 4, ZOOM_PAN_OPTIONS);
     e.stopPropagation(); // do not swapback the ionFab list bottoms
   }
