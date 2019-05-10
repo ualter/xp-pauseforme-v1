@@ -226,6 +226,7 @@ export class MapPage implements OnInit {
   }
 
   ngOnInit() {
+    console.log("ngOnInit");
     this.loadMap();
     window.addEventListener("orientationchange", function(){
       setTimeout(function () {
@@ -238,13 +239,25 @@ export class MapPage implements OnInit {
   }
 
   ngAfterViewInit(){
-    $(document).ready(function(){
+    console.log("ngAfterViewInit");
+    //$(document).ready(function(){
       //console.log('JQuery is working!!');
-    });
+    //});
 
     setTimeout(function () {
       map.invalidateSize(ZOOM_PAN_OPTIONS);
     }, 0);
+
+    // Check when Back to Screen (after going somewhere, like other pages or App in Background, etc.
+    // If WebSocket were eventually closed (for some reason I am still investigating why)
+    // Get the screen in Connect Me mode for the use Connect it Again
+    console.log(this.xpWsSocket);
+    console.log(this.xpWsSocket.getWebSocket());
+    console.log(this.xpWsSocket.getWebSocket().readyState);
+    if ( !this.xpWsSocket || !this.xpWsSocket.getWebSocket() ||  this.xpWsSocket.getWebSocket().readyState != WS_OPEN ) {
+       this.changeStateToDisconnected();
+       this.clearAirplaneMaker();
+    }
   }
 
   ionViewDidEnter() {
@@ -254,6 +267,8 @@ export class MapPage implements OnInit {
   onMessageReceived(payload) {
     var origin  = payload.origin;
     var message = payload.data;
+
+    console.log("message received");
 
     // Connection is still OPEN
     if ( this.xpWsSocket.getWebSocket() && this.xpWsSocket.getWebSocket().readyState == WS_OPEN ) {
@@ -954,6 +969,10 @@ export class MapPage implements OnInit {
     this.connectMeDisable = false;
     attempingConnectTimes = 0;
 
+    this.clearAirplaneMaker();
+  }
+
+  clearAirplaneMaker() {
     if (airplaneMarker) {
       this.utils.trace("Removed the AirplaneMarker");
       map.removeLayer(airplaneMarker);
