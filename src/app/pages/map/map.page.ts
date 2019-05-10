@@ -146,7 +146,7 @@ export class MapPage implements OnInit {
   visibilityWaiting:         string = 'hidden';          
 
   messageBarIcon:       string = 'thunderstorm';
-  messageBarText:       string = "Disconnected";
+  messageBarText:       string = "DISCONNECTED";
   messageBarColorIcon:  string = "";
   messageBarColor:      string = "red";
   
@@ -251,9 +251,6 @@ export class MapPage implements OnInit {
     // Check when Back to Screen (after going somewhere, like other pages or App in Background, etc.
     // If WebSocket were eventually closed (for some reason I am still investigating why)
     // Get the screen in Connect Me mode for the use Connect it Again
-    console.log(this.xpWsSocket);
-    console.log(this.xpWsSocket.getWebSocket());
-    console.log(this.xpWsSocket.getWebSocket().readyState);
     if ( !this.xpWsSocket || !this.xpWsSocket.getWebSocket() ||  this.xpWsSocket.getWebSocket().readyState != WS_OPEN ) {
        this.changeStateToDisconnected();
        this.clearAirplaneMaker();

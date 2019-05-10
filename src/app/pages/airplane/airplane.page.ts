@@ -56,6 +56,8 @@ export class AirplanePage  implements OnInit {
     var idAirplane = event.detail.value;
     if ( idAirplane != this.previousModel) {
       this.dataService.changeSettingsAirplane(idAirplane);
+      this.dataService.saveSettings();
+      this.dataService.notifyChangeSettingsToSubscribers();
       this.previousModel = idAirplane;
     }
   }

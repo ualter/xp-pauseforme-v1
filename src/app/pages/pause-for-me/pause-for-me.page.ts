@@ -3,6 +3,7 @@ import { XpWebSocketService } from './../../services/xp-websocket.service';
 import { UtilsService } from './../../services/utils.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 const WS_OPEN = 1;
 
@@ -13,52 +14,53 @@ const WS_OPEN = 1;
 })
 export class PauseForMePage implements OnInit, OnDestroy {
 
-  MIN_DIST_NAVAID       = 3;
-  MAX_DIST_NAVAID       = 999;
-  STEP_NAVAID           = 1;
-  ICON_SEPARATOR_NAVAID = "at";
-  COLOR_ICONS_SELECTION: string = "warning";
+  private MIN_DIST_NAVAID       = 3;
+  private MAX_DIST_NAVAID       = 999;
+  private STEP_NAVAID           = 1;
+  private ICON_SEPARATOR_NAVAID = "at";
+  private COLOR_ICONS_SELECTION: string = "warning";
 
-  timeImg:string;
-  airportId:string   = "LEBL";
-  vorId:string       = "SLL";
-  ndbId:string       = "VNV";
-  fixId:string       = "VIBOK";
-  dmeId:string       = "BCN";
-  airportDist:number = 999;
-  vorDist:number     = 999;
-  ndbDist:number     = 999;
-  fixDist:number     = 999;
-  dmeDist:number     = 999;
-  currentAirportDist:number = 999;
-  currentVorDist:number     = 999;
-  currentNdbDist:number     = 999;
-  currentFixDist:number     = 999;
-  currentDmeDist:number     = 999;
-  altitudeKnobValues:{ upper:number,lower:number } = {
+  private timeImg:string;
+  private airportId:string   = "LEBL";
+  private vorId:string       = "SLL";
+  private ndbId:string       = "VNV";
+  private fixId:string       = "VIBOK";
+  private dmeId:string       = "BCN";
+  private airportDist:number = 999;
+  private vorDist:number     = 999;
+  private ndbDist:number     = 999;
+  private fixDist:number     = 999;
+  private dmeDist:number     = 999;
+  private currentAirportDist:number = 999;
+  private currentVorDist:number     = 999;
+  private currentNdbDist:number     = 999;
+  private currentFixDist:number     = 999;
+  private currentDmeDist:number     = 999;
+  private altitudeKnobValues:{ upper:number,lower:number } = {
     upper:28000,
     lower:10000
   }
-  airspeedKnobValues:{ upper:number,lower:number } = {
+  private airspeedKnobValues:{ upper:number,lower:number } = {
     upper:320,
     lower:150
   }
-  time = "22:15:00";
-  currentTime = "99:99:99";
+  private time = "22:15:00";
+  private currentTime = "99:99:99";
 
-  currentAltitude:number = 0;
-  currentAirspeed:number = 0;
+  private currentAltitude:number = 0;
+  private currentAirspeed:number = 0;
 
-  airportSelected: boolean = false;
-  vorSelected: boolean = false;
-  ndbSelected: boolean = false;
-  fixSelected: boolean = false;
-  dmeSelected: boolean = false;
+  private airportSelected: boolean = false;
+  private vorSelected: boolean = false;
+  private ndbSelected: boolean = false;
+  private fixSelected: boolean = false;
+  private dmeSelected: boolean = false;
 
-  altitudeSelected: boolean = false;
-  airspeedSelected: boolean = false;
-  timeSelected: boolean = false;
+  private altitudeSelected: boolean = false;
+  private airspeedSelected: boolean = false;
+  private timeSelected: boolean = false;
 
+  private subscription: Subscription;
 
   static reloj: number = 2;
 
@@ -97,47 +99,43 @@ export class PauseForMePage implements OnInit, OnDestroy {
       }
     }
 
-    if ( this.xpWsSocket.observable() ) {
-      this.xpWsSocket.observable().subscribe(
-          payload => {
-            var json = JSON.parse(payload.data);
-            if ( json.airplane ) {
-              this.currentAltitude    = json.airplane.currentAltitude;
-              this.currentAirspeed    = json.airplane.airspeed;
-              this.currentAirportDist = json.airplane.pauseforme.navaid.config.distance.airport;
-              this.currentVorDist     = json.airplane.pauseforme.navaid.config.distance.vor;
-              this.currentFixDist     = json.airplane.pauseforme.navaid.config.distance.fix;
-              this.currentNdbDist     = json.airplane.pauseforme.navaid.config.distance.ndb;
-              this.currentDmeDist     = json.airplane.pauseforme.navaid.config.distance.dme;
-              this.currentTime        = this.utils.formatCurrentTime(json.airplane.time);
+    this.subscription = this.xpWsSocket.messageStream().subscribe (
+        json => {
+          var json = JSON.parse(json);
+          if ( json.airplane ) {
+            this.currentAltitude    = json.airplane.currentAltitude;
+            this.currentAirspeed    = json.airplane.airspeed;
+            this.currentAirportDist = json.airplane.pauseforme.navaid.config.distance.airport;
+            this.currentVorDist     = json.airplane.pauseforme.navaid.config.distance.vor;
+            this.currentFixDist     = json.airplane.pauseforme.navaid.config.distance.fix;
+            this.currentNdbDist     = json.airplane.pauseforme.navaid.config.distance.ndb;
+            this.currentDmeDist     = json.airplane.pauseforme.navaid.config.distance.dme;
+            this.currentTime        = this.utils.formatCurrentTime(json.airplane.time);
 
-              this.airportSelected = json.airplane.pauseforme.navaid.config.selected.airport == 1 ? true : false;
-              this.vorSelected     = json.airplane.pauseforme.navaid.config.selected.vor == 1 ? true : false;
-              this.ndbSelected     = json.airplane.pauseforme.navaid.config.selected.ndb == 1 ? true : false;
-              this.fixSelected     = json.airplane.pauseforme.navaid.config.selected.fix == 1 ? true : false;
-              this.dmeSelected     = json.airplane.pauseforme.navaid.config.selected.dme == 1 ? true : false;
+            this.airportSelected = json.airplane.pauseforme.navaid.config.selected.airport == 1 ? true : false;
+            this.vorSelected     = json.airplane.pauseforme.navaid.config.selected.vor == 1 ? true : false;
+            this.ndbSelected     = json.airplane.pauseforme.navaid.config.selected.ndb == 1 ? true : false;
+            this.fixSelected     = json.airplane.pauseforme.navaid.config.selected.fix == 1 ? true : false;
+            this.dmeSelected     = json.airplane.pauseforme.navaid.config.selected.dme == 1 ? true : false;
 
-              this.altitudeSelected = json.airplane.pauseforme.altitude.selected == 1 ? true : false;
-              this.airspeedSelected = json.airplane.pauseforme.speed.selected    == 1 ? true : false;
+            this.altitudeSelected = json.airplane.pauseforme.altitude.selected == 1 ? true : false;
+            this.airspeedSelected = json.airplane.pauseforme.speed.selected    == 1 ? true : false;
 
-              this.timeSelected = json.airplane.pauseforme.timePauseSelected == 1 ? true : false;
+            this.timeSelected = json.airplane.pauseforme.timePauseSelected == 1 ? true : false;
 
-              console.log("| etaPauseByNavaIdAirport: " + this.mapService.etaPauseByNavaIdAirport);
-              console.log("| etaPauseByNavaIdVor: " + this.mapService.etaPauseByNavaIdVor);
-              console.log("| etaPauseByNavaIdNdb: " + this.mapService.etaPauseByNavaIdNdb);
-              console.log("| etaPauseByNavaIdFix: " + this.mapService.etaPauseByNavaIdFix);
-              console.log("| etaPauseByNavaIdDme: " + this.mapService.etaPauseByNavaIdDme);
-              console.log("* etaPauseByTime: " + this.mapService.etaPauseByTime);
-              console.log("--------------------------------");
-
-
-            }
-          },
-          error => {
-            this.utils.error('Oops', error)
+            console.log("| etaPauseByNavaIdAirport: " + this.mapService.etaPauseByNavaIdAirport);
+            console.log("| etaPauseByNavaIdVor: " + this.mapService.etaPauseByNavaIdVor);
+            console.log("| etaPauseByNavaIdNdb: " + this.mapService.etaPauseByNavaIdNdb);
+            console.log("| etaPauseByNavaIdFix: " + this.mapService.etaPauseByNavaIdFix);
+            console.log("| etaPauseByNavaIdDme: " + this.mapService.etaPauseByNavaIdDme);
+            console.log("* etaPauseByTime: " + this.mapService.etaPauseByTime);
+            console.log("--------------------------------");
           }
-      );
-    }
+        },
+        error => {
+          this.utils.error('Oops', error)
+        }
+    );
 
   }
 
@@ -145,6 +143,7 @@ export class PauseForMePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   randomNumber(max, min) {

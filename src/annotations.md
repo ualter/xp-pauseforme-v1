@@ -23,6 +23,8 @@ $ ionic cordova plugin add cordova-plugin-background-mode
 $ npm install @ionic-native/background-mode
 $ ionic cordova plugin add cordova-plugin-screen-orientation
 $ npm install @ionic-native/screen-orientation
+$ ionic cordova plugin add cordova-plugin-insomnia
+$ npm install @ionic-native/insomnia
 ```
 #### Development Server
 ```shell

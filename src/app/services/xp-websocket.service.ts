@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Observable, Observer, Subject} from 'rxjs';
+import {Observable, Observer, Subject, observable} from 'rxjs';
 import { UtilsService } from './utils.service';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class XpWebSocketService {
   private subject: Subject<MessageEvent>;
   private ws : any;
   private lastMessageReceived: any;
+  private streamObservables: Map<number,Observable<any>>;
   
   constructor(private utils: UtilsService) { 
   }
@@ -63,6 +64,18 @@ export class XpWebSocketService {
 
   public observable() {
     return this.subject;
+  }
+
+  public messageStream() : Observable<any> {
+    return new Observable( observer => {
+      setInterval( () => {
+          if ( this.getLastMessageReceive() ) {
+            observer.next( this.getLastMessageReceive() );
+          } else {
+            observer.error(" Not available! ");
+          }
+      }, 1000);
+    });
   }
 
   public getWebSocket() {

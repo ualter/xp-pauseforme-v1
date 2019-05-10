@@ -75,9 +75,35 @@ export class SettingPage  {
     }
   }
 
-
   openAirplanesPage() {
     this.navCtrl.navigateForward('/airplane');
+  }
+
+  onFocusLostEvent() {
+    let input = event['target'] as HTMLElement;
+
+    if ( input.id == "inputXplaneAddress" ) {
+      if ( this.xplaneAddress != this.dataService.settings.xplaneAddress ) {
+          this.dataService.changeSettingsXplaneAddress(this.xplaneAddress);
+          this.dataService.saveSettings();
+          this.dataService.notifyChangeSettingsToSubscribers();
+      }
+    } else
+    if ( input.id == "inputXplanePort" ) {
+      if ( this.xplanePort != this.dataService.settings.xplanePort ) {
+          this.dataService.changeSettingsXplanePort(this.xplanePort);
+          this.dataService.saveSettings();
+          this.dataService.notifyChangeSettingsToSubscribers();
+      }
+    } else
+    if ( input.id == "inputDeviceName" ) {
+      if ( this.deviceName != this.dataService.settings.name ) {
+          this.dataService.changeSettingsName(this.deviceName);
+          this.dataService.saveSettings();
+          this.dataService.notifyChangeSettingsToSubscribers();
+      }
+    }
+    
   }
   
 }
