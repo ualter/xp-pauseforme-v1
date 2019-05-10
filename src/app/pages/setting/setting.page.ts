@@ -79,7 +79,7 @@ export class SettingPage  {
     this.navCtrl.navigateForward('/airplane');
   }
 
-  onFocusLostEvent() {
+  onFocusLostEvent(event) {
     let input = event['target'] as HTMLElement;
 
     if ( input.id == "inputXplaneAddress" ) {

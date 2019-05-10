@@ -14,51 +14,51 @@ const WS_OPEN = 1;
 })
 export class PauseForMePage implements OnInit, OnDestroy {
 
-  private MIN_DIST_NAVAID       = 3;
-  private MAX_DIST_NAVAID       = 999;
-  private STEP_NAVAID           = 1;
-  private ICON_SEPARATOR_NAVAID = "at";
-  private COLOR_ICONS_SELECTION: string = "warning";
+  MIN_DIST_NAVAID       = 3;
+  MAX_DIST_NAVAID       = 999;
+  STEP_NAVAID           = 1;
+  ICON_SEPARATOR_NAVAID = "at";
+  COLOR_ICONS_SELECTION: string = "warning";
 
-  private timeImg:string;
-  private airportId:string   = "LEBL";
-  private vorId:string       = "SLL";
-  private ndbId:string       = "VNV";
-  private fixId:string       = "VIBOK";
-  private dmeId:string       = "BCN";
-  private airportDist:number = 999;
-  private vorDist:number     = 999;
-  private ndbDist:number     = 999;
-  private fixDist:number     = 999;
-  private dmeDist:number     = 999;
-  private currentAirportDist:number = 999;
-  private currentVorDist:number     = 999;
-  private currentNdbDist:number     = 999;
-  private currentFixDist:number     = 999;
-  private currentDmeDist:number     = 999;
-  private altitudeKnobValues:{ upper:number,lower:number } = {
+  timeImg:string;
+  airportId:string   = "LEBL";
+  vorId:string       = "SLL";
+  ndbId:string       = "VNV";
+  fixId:string       = "VIBOK";
+  dmeId:string       = "BCN";
+  airportDist:number = 999;
+  vorDist:number     = 999;
+  ndbDist:number     = 999;
+  fixDist:number     = 999;
+  dmeDist:number     = 999;
+  currentAirportDist:number = 999;
+  currentVorDist:number     = 999;
+  currentNdbDist:number     = 999;
+  currentFixDist:number     = 999;
+  currentDmeDist:number     = 999;
+  altitudeKnobValues:{ upper:number,lower:number } = {
     upper:28000,
     lower:10000
   }
-  private airspeedKnobValues:{ upper:number,lower:number } = {
+  airspeedKnobValues:{ upper:number,lower:number } = {
     upper:320,
     lower:150
   }
-  private time = "22:15:00";
-  private currentTime = "99:99:99";
+  time = "22:15:00";
+  currentTime = "99:99:99";
 
-  private currentAltitude:number = 0;
-  private currentAirspeed:number = 0;
+  currentAltitude:number = 0;
+  currentAirspeed:number = 0;
 
-  private airportSelected: boolean = false;
-  private vorSelected: boolean = false;
-  private ndbSelected: boolean = false;
-  private fixSelected: boolean = false;
-  private dmeSelected: boolean = false;
+  airportSelected: boolean = false;
+  vorSelected: boolean = false;
+  ndbSelected: boolean = false;
+  fixSelected: boolean = false;
+  dmeSelected: boolean = false;
 
-  private altitudeSelected: boolean = false;
-  private airspeedSelected: boolean = false;
-  private timeSelected: boolean = false;
+  altitudeSelected: boolean = false;
+  airspeedSelected: boolean = false;
+  timeSelected: boolean = false;
 
   private subscription: Subscription;
 

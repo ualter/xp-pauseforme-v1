@@ -110,8 +110,12 @@ $ cordova run ios --debug --target "iPhone-8" --buildFlag='-UseModernBuildSystem
 ```shell
 ## Add Platform if not present
 $ ionic cordova platform add browser
-## Run it
+## Run it Ionic Dev Environment
 $ ionic cordova run browser
+## Build for Production (running with any Http Server)
+$ ionic cordova build browser --prod
+## Running with Python "HttpServer" - Must have Python 3 installed, available at Path Command
+$ py -m http.server <PORT>
 ```
 ---
 ## Troubleshootings

@@ -15,10 +15,11 @@ export class NotificationPage implements OnInit {
 
   COLOR_ICONS_SELECTION: string = "warning";
 
-  private minuteValues:string = "0,1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55";
-  private alertLines: any = [];
-  private initialStateAlert: any = [false,false,false,false,false]; 
-  private scheduled:any = [];
+  minuteValues:string = "0,1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55";
+  alertLines: any = [];
+  initialStateAlert: any = [false,false,false,false,false]; 
+  scheduled:any = [];
+  
   private subscription: Subscription;
 
   constructor(
