@@ -217,21 +217,24 @@ export class MapPage implements OnInit {
              this.checkZoomLevelChangesOnMap(true);
         }
       });
+
+      this.platform.ready().then(() => {
+        //this.loadMap();
+        this.getSetUserPosition();
+        this.backgroundMode.enable();
+      });
   }
 
   ngOnInit() {
     this.loadMap();
-    this.getSetUserPosition();
-
     window.addEventListener("orientationchange", function(){
       setTimeout(function () {
-        console.log("(500ms)Invalidate Size Map");
         map.invalidateSize(0);
-        map.setView([latitude, longitude], MAX_ZOOM - 5);
+        if ( this.followAirplane ) {
+          map.setView([latitude, longitude], MAX_ZOOM - 5);
+        }
       }, 500);
     });
-
-    this.backgroundMode.enable();
   }
 
   ngAfterViewInit(){
@@ -546,17 +549,17 @@ export class MapPage implements OnInit {
   }
 
   getSetUserPosition() {
-    this.geolocation.getCurrentPosition().then((resp) => {
-      if (resp) {
-        userLatitude  = resp.coords.latitude;
-        userLongitude = resp.coords.longitude;
-        this.utils.info("LatLng User Location: " + userLatitude + ":" + userLongitude);
-        var latLng = leaflet.latLng(userLatitude, userLongitude);
-        //userMarker = leaflet.marker(latLng).addTo(map);
-        map.flyTo({userLatitude:userLongitude}, MAX_ZOOM - 2, ZOOM_PAN_OPTIONS);
-      }      
+    this.geolocation.getCurrentPosition({ timeout: 30000 }).then((resp) => {
+        if (resp) {
+          userLatitude  = resp.coords.latitude;
+          userLongitude = resp.coords.longitude;
+          this.utils.info("LatLng User Location: " + userLatitude + ":" + userLongitude);
+          var latLng = leaflet.latLng(userLatitude, userLongitude);
+          //userMarker = leaflet.marker(latLng).addTo(map);
+          map.flyTo({userLatitude:userLongitude}, MAX_ZOOM - 2, ZOOM_PAN_OPTIONS);
+        }      
     }).catch((error) => {
-       this.utils.error('Error getting location: ' + error.message);
+        this.utils.error('Error getting location: ' + error.message);
     });
 
     // In case he/she moves, let's get the new localization
@@ -581,6 +584,7 @@ export class MapPage implements OnInit {
   }
 
   loadMap() {
+    console.log("loadMap");
     map = leaflet.map("map", {
           layers: [standardTile], 
           minZoom: 3,
