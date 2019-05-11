@@ -219,9 +219,11 @@ export class MapPage implements OnInit {
       });
 
       this.platform.ready().then(() => {
-        //this.loadMap();
-        this.getSetUserPosition();
-        this.backgroundMode.enable();
+          this.getSetUserPosition();
+          this.backgroundMode.enable();
+          this.backgroundMode.on("activate").subscribe( () => {
+            this.backgroundMode.disableWebViewOptimizations(); 
+          });
       });
   }
 
@@ -840,7 +842,7 @@ export class MapPage implements OnInit {
     e.stopPropagation();
   }
 
-  static async  presentAlert(msgAlert) {
+  static async presentAlert(msgAlert) {
     const alert = await staticAlertController.create(msgAlert);
     await alert.present(); 
   }
