@@ -98,8 +98,8 @@
       "cordova-plugin-insomnia": {}
     },
     "platforms": [
-      "ios",
-      "browser"
+      "browser",
+      "ios"
     ]
   }
 }

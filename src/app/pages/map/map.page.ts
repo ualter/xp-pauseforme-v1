@@ -81,6 +81,8 @@ enum State {
   PAUSED = 2,
 }
 
+var stateBeforePause: State = State.DISCONNECTED;
+
 const DEFAULT_AIRPLANE_ICON_WIDTH  = 62;
 const DEFAULT_AIRPLANE_ICON_HEIGHT = 59;
 var   AIRPLANE_ICON_WIDTH          = DEFAULT_AIRPLANE_ICON_WIDTH;
@@ -215,21 +217,53 @@ export class MapPage implements OnInit {
 
       this.platform.ready().then(() => {
           this.getSetUserPosition();
+
           this.backgroundMode.enable();
           this.backgroundMode.on("activate").subscribe( () => {
             this.backgroundMode.disableWebViewOptimizations(); 
           });
+
+          document.addEventListener("pause", this.onPause, false);
+          document.addEventListener("resume", this.onResume, false);
       });
   }
 
+  // Enter on Background Mode
+  onPause() {
+    console.log("PAUSE " + stateBeforePause);
+    // Save last status connection before Background activation
+    if ( MapPage.me.xpWsSocket && MapPage.me.xpWsSocket.getWebSocket() && MapPage.me.xpWsSocket.getWebSocket().readyState == WS_OPEN ) {
+       stateBeforePause = State.CONNECTED;
+    } else {
+       stateBeforePause = State.DISCONNECTED;
+    }
+  }
+
+  // Back from Background Mode
+  onResume() {
+    console.log("RESUME " + stateBeforePause);
+    if ( (!MapPage.me.xpWsSocket || 
+         !MapPage.me.xpWsSocket.getWebSocket() || MapPage.me.xpWsSocket.getWebSocket().readyState != WS_OPEN) &&
+         stateBeforePause == State.CONNECTED ) {
+
+         MapPage.me.clearAirplaneMaker();
+         MapPage.me.connect();
+
+         setTimeout(function () {
+            map.invalidateSize(0);
+            map.flyTo({lon: longitude, lat: latitude}, zoomPlane, ZOOM_PAN_OPTIONS);
+         }, 2000);
+    }
+  }
+
   ngOnInit() {
-    console.log("ngOnInit");
     this.loadMap();
+
     window.addEventListener("orientationchange", function(){
       setTimeout(function () {
         map.invalidateSize(0);
         if ( this.followAirplane ) {
-          map.setView([latitude, longitude], MAX_ZOOM - 5);
+           map.setView([latitude, longitude], zoomPlane);
         }
       }, 500);
     });
@@ -244,14 +278,6 @@ export class MapPage implements OnInit {
     setTimeout(function () {
       map.invalidateSize(ZOOM_PAN_OPTIONS);
     }, 0);
-
-    // Check when Back to Screen (after going somewhere, like other pages or App in Background, etc.
-    // If WebSocket were eventually closed (for some reason I am still investigating why)
-    // Get the screen in Connect Me mode for the use Connect it Again
-    if ( !this.xpWsSocket || !this.xpWsSocket.getWebSocket() ||  this.xpWsSocket.getWebSocket().readyState != WS_OPEN ) {
-       this.changeStateToDisconnected();
-       this.clearAirplaneMaker();
-    }
   }
 
   ionViewDidEnter() {
@@ -261,8 +287,6 @@ export class MapPage implements OnInit {
   onMessageReceived(payload) {
     var origin  = payload.origin;
     var message = payload.data;
-
-    console.log("message received");
 
     // Connection is still OPEN
     if ( this.xpWsSocket.getWebSocket() && this.xpWsSocket.getWebSocket().readyState == WS_OPEN ) {
