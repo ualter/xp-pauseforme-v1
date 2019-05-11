@@ -248,10 +248,10 @@ export class MapPage implements OnInit {
 
          MapPage.me.clearAirplaneMaker();
          MapPage.me.connect();
-
          setTimeout(function () {
             map.invalidateSize(0);
             map.flyTo({lon: longitude, lat: latitude}, zoomPlane, ZOOM_PAN_OPTIONS);
+            MapPage.me.changeIonFabButtonStateFollowAirplane(true);
          }, 2000);
     }
   }
