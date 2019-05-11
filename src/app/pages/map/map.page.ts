@@ -66,17 +66,14 @@ var airplanePopup;
 var followAirplane;
 var gamePaused;
 var buttonPlayPause;
-var buttonFollowAirplane;
-//var buttonGoToLocation;
-//var buttonDisconnect;
 var identificationName;
-var staticXPlaneWsServer;
-var staticAlertController;
 var attempingConnectTimes = 0;
 var toastPresented;
 var threadAttemptToConnect;
 var lastAirplaneData;
 var infoAirplaneButtonShown: boolean = false;
+var zoomUser  = MAX_ZOOM;
+var zoomPlane = MAX_ZOOM - 4;
 
 enum State {
   DISCONNECTED = 0,
@@ -159,7 +156,7 @@ export class MapPage implements OnInit {
   private xplaneAddress: string;
   private xplanePort: string;
 
-  private static myself:MapPage;
+  private static me:MapPage;
 
   constructor(
     private dataService: DataService,
@@ -178,9 +175,7 @@ export class MapPage implements OnInit {
     private mapService: MapService,
     private screenOrientation: ScreenOrientation) {
 
-      staticXPlaneWsServer  = xpWsSocket;
-      staticAlertController = alertCtrl;
-      MapPage.myself = this;
+      MapPage.me = this;
 
       this.dataService.currentSettings.subscribe(settings => {
         this.xplaneAddress = settings.xplaneAddress;
@@ -570,7 +565,7 @@ export class MapPage implements OnInit {
           this.utils.info("LatLng User Location: " + userLatitude + ":" + userLongitude);
           var latLng = leaflet.latLng(userLatitude, userLongitude);
           //userMarker = leaflet.marker(latLng).addTo(map);
-          map.flyTo({userLatitude:userLongitude}, MAX_ZOOM - 2, ZOOM_PAN_OPTIONS);
+          map.flyTo({userLatitude:userLongitude}, zoomUser, ZOOM_PAN_OPTIONS);
         }      
     }).catch((error) => {
         this.utils.error('Error getting location: ' + error.message);
@@ -630,7 +625,7 @@ export class MapPage implements OnInit {
     containerBtn.appendChild(btn2);
 
     leaflet.DomEvent.on(btn2,'click', () => {
-      MapPage.sendMessageToXPlane("FJKDSL","YO");
+      this.sendMessageToXPlane("FJKDSL","YO");
     });
 
     /*choicePopUp
@@ -639,9 +634,12 @@ export class MapPage implements OnInit {
       .openOn(map);*/
   }
 
+  /*
+   * Must used Static Callings because must be visible to Leaflet Map Javascript Libraries
+   */
   zoomListener() {
     // Check changes that must be done according to the Zoom level (mainly icons size)
-    MapPage.myself.checkZoomLevelChangesOnMap();
+    MapPage.me.checkZoomLevelChangesOnMap();
 
     if ( followAirplane && map && leaflet ) {
       try {
@@ -649,7 +647,7 @@ export class MapPage implements OnInit {
           map.panTo(leaflet.latLng(latitude,longitude));
         }
       } catch (error) {
-        MapPage.myself.utils.error(error);
+        MapPage.me.utils.error(error);
       }
     }
   }
@@ -750,15 +748,16 @@ export class MapPage implements OnInit {
     followAirplane = false;
     this.changeIonFabButtonStateFollowAirplane(false);
     if ( isNaN(userLongitude) ) {
-      MapPage.myself.utils.warn("User Longitude were NaN, set to " + DEFAULT_LONGITUDE);
+      this.utils.warn("User Longitude were NaN, set to " + DEFAULT_LONGITUDE);
       userLongitude = DEFAULT_LONGITUDE;
     }
     if ( isNaN(userLatitude) ) {
-      MapPage.myself.utils.warn("Latitude were NaN, set to " + DEFAULT_LATITUDE);
+      this.utils.warn("Latitude were NaN, set to " + DEFAULT_LATITUDE);
       userLatitude = DEFAULT_LATITUDE;
     }
 
-    map.flyTo({lon: userLongitude, lat: userLatitude}, MAX_ZOOM - 4, ZOOM_PAN_OPTIONS);
+    zoomPlane = map.getZoom();
+    map.flyTo({lon: userLongitude, lat: userLatitude}, zoomUser, ZOOM_PAN_OPTIONS);
     e.stopPropagation(); // do not swapback the ionFab list bottoms
   }
 
@@ -785,14 +784,14 @@ export class MapPage implements OnInit {
     if ( followAirplane ) {
       this.changeIonFabButtonStateFollowAirplane(true);
       if ( isNaN(longitude) ) {
-        MapPage.myself.utils.warn("Longitude were NaN, set to " + DEFAULT_LONGITUDE);
+        this.utils.warn("Longitude were NaN, set to " + DEFAULT_LONGITUDE);
         longitude = DEFAULT_LONGITUDE;
       }
       if ( isNaN(latitude) ) {
-        MapPage.myself.utils.warn("Latitude were NaN, set to " + DEFAULT_LATITUDE);
+        this.utils.warn("Latitude were NaN, set to " + DEFAULT_LATITUDE);
         latitude = DEFAULT_LATITUDE;
       }
-      map.flyTo({lon: longitude, lat: latitude}, map.getZoom(), ZOOM_PAN_OPTIONS);
+      map.flyTo({lon: longitude, lat: latitude}, zoomPlane, ZOOM_PAN_OPTIONS);
     } else {
       this.changeIonFabButtonStateFollowAirplane(false);
     }
@@ -811,10 +810,10 @@ export class MapPage implements OnInit {
         } else {
           let msg = "ERROR: Not found the 'ion-icon' Element for change its Vector Image";
           console.log(msg);
-          MapPage.myself.utils.error(msg)
+          this.utils.error(msg)
         }
-        MapPage.myself.changeIonFabButtonState(true,container);
-        MapPage.myself.utils.info("X-Plane was PAUSED!");
+        MapPage.me.changeIonFabButtonState(true,container);
+        MapPage.me.utils.info("X-Plane was PAUSED!");
     });
     container.addEventListener("PLAY", function() {
         let iconPathVector = document.getElementById('btnPlayPause').getElementsByTagName('ion-icon')[0];
@@ -825,25 +824,25 @@ export class MapPage implements OnInit {
           pathElement.setAttribute('d',pauseVector);
         } else {
           let msg = "ERROR: Not found the 'ion-icon' Element for change its Vector Image";
-          MapPage.myself.utils.error(msg)
+          this.utils.error(msg)
         }
-        MapPage.myself.changeIonFabButtonState(false,container);
-        MapPage.myself.utils.info("X-Plane is in PLAY mode now!");
+        MapPage.me.changeIonFabButtonState(false,container);
+        MapPage.me.utils.info("X-Plane is in PLAY mode now!");
     });
     buttonPlayPause = container;
   }
 
   playPause(e) {
-    if ( MapPage.getWSState() == WS_OPEN ) {
+    if ( this.getWSState() == WS_OPEN ) {
       this.visibilityWaiting = "shown"; 
       gamePaused = !gamePaused;
     }
-    MapPage.sendMessageToXPlane("{PAUSE}", identificationName);
+    this.sendMessageToXPlane("{PAUSE}", identificationName);
     e.stopPropagation();
   }
 
-  static async presentAlert(msgAlert) {
-    const alert = await staticAlertController.create(msgAlert);
+  async presentAlert(msgAlert) {
+    const alert = await this.alertCtrl.create(msgAlert);
     await alert.present(); 
   }
 
@@ -859,7 +858,7 @@ export class MapPage implements OnInit {
   }
 
   disConnectButton(e) {
-    MapPage.presentAlert({
+    this.presentAlert({
       header: 'Warning',
       subHeader: 'X-Plane Connection',
       mode:'ios',
@@ -878,7 +877,7 @@ export class MapPage implements OnInit {
         {
           text: 'Yes, go ahed!',
           handler: () => {
-            MapPage.myself.disconnect();
+            this.disconnect();
           }
         }
       ]
@@ -886,11 +885,11 @@ export class MapPage implements OnInit {
     e.stopPropagation();
   }
 
-  static sendMessageToXPlane(message, identity) {
-    if ( !staticXPlaneWsServer                || 
-         !staticXPlaneWsServer.getWebSocket() || 
-          staticXPlaneWsServer.getWebSocket().readyState != WS_OPEN ) {
-          MapPage.presentAlert({
+  sendMessageToXPlane(message, identity) {
+    if ( !this.xpWsSocket                || 
+         !this.xpWsSocket.getWebSocket() || 
+         this.xpWsSocket.getWebSocket().readyState != WS_OPEN ) {
+          this.presentAlert({
             header: 'Warning',
             subHeader: 'X-Plane Connection',
             mode:'ios',
@@ -907,7 +906,7 @@ export class MapPage implements OnInit {
               {
                 text: 'Connect Me Now',
                 handler: (e: any) => {
-                  MapPage.myself.switchConnectMeState();
+                  this.switchConnectMeState();
                   //e.stopPropagation();
                 }
               }
@@ -915,20 +914,20 @@ export class MapPage implements OnInit {
         });
     } else {
         let finalMessage = message + "," + identity;
-        MapPage.myself.utils.info("Sent \"" + finalMessage + "\" message to X-Plane");
-        staticXPlaneWsServer.getWebSocket().send(finalMessage);
+        this.utils.info("Sent \"" + finalMessage + "\" message to X-Plane");
+        this.xpWsSocket.getWebSocket().send(finalMessage);
     }
   }
 
-  static getWSState() {
-    if ( staticXPlaneWsServer && staticXPlaneWsServer.getWebSocket() ) {
-      return staticXPlaneWsServer.getWebSocket().readyState;
+  getWSState() {
+    if ( this.xpWsSocket && this.xpWsSocket.getWebSocket() ) {
+      return this.xpWsSocket.getWebSocket().readyState;
     } else {
       return WS_CLOSED;
     }
   }
 
-  static createContainerButton() {
+  /* static createContainerButton() {
     var container = leaflet.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
     container.style.backgroundColor = 'white';
     container.style.width           = '33px';
@@ -940,7 +939,7 @@ export class MapPage implements OnInit {
     container.style.color           = "rgba(47, 79, 79, 0.8)";
     container.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
     return container;
-  }
+  } */
 
   
   connect() {
@@ -957,7 +956,7 @@ export class MapPage implements OnInit {
   }
 
   disconnect() {
-    MapPage.sendMessageToXPlane("{CLOSE}", identificationName);
+    this.sendMessageToXPlane("{CLOSE}", identificationName);
     if ( this.subscription ) {
       this.subscription.complete();
       this.subscription.unsubscribe();
@@ -1019,7 +1018,7 @@ export class MapPage implements OnInit {
       // Starting in following airplane mode
       followAirplane                   = true;
       this.changeIonFabButtonStateFollowAirplane(true);
-      map.flyTo({lon: longitude, lat: latitude}, map.getZoom(), ZOOM_PAN_OPTIONS);
+      map.flyTo({lon: longitude, lat: latitude}, zoomPlane, ZOOM_PAN_OPTIONS);
     },fadeInOut+600);
     
   }
@@ -1103,7 +1102,7 @@ export class MapPage implements OnInit {
     if ( attempingConnectTimes > (RETRIES_ATTEMPTING_CONNECT-1) ) {
       clearInterval(threadAttemptToConnect);
       threadAttemptToConnect = null;
-      MapPage.presentAlert({
+      this.presentAlert({
         title: 'Warning',
         message: `
           <p > <b>` + attempingConnectTimes + `</b> attempts were already made to contact X-Plane. Let's see...<br><br><b>1)</b> 

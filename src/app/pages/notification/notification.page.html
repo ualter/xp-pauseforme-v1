@@ -40,7 +40,8 @@
                     </ion-row>
                     <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!line.alert ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                       <ion-col>
-                          <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!line.userSelected"></ion-icon>
+                          <i class="fas fa-check-circle" style="color:green;" [hidden]="!line.userSelected"></i>&nbsp;
+                          <!-- <ion-icon name="checkmark-circle" color="{{COLOR_ICONS_SELECTION}}" [hidden]="!line.userSelected"></ion-icon> -->
                           <span class="labelValue">{{line.navaId}}</span>&nbsp;
                           <span class="labelValue">{{line.distance}}nm</span>&nbsp;
                           <span style="font-size:16px;font-weight: bold"><i class="fas fa-less-than-equal"></i></span>&nbsp;
