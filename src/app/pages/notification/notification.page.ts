@@ -33,8 +33,10 @@ export class NotificationPage implements OnInit {
       if ( platform.is("iphone") ) {
       }
 
+      let unitsSymbol = "min";
       this.alertLines = [
         {
+          "alertId":1,
           "id": "Airport",
           "alert":false,
           "userSelected":false,
@@ -43,20 +45,22 @@ export class NotificationPage implements OnInit {
           "userDistance": 50,
           "estimatedPause":"01:43:32", 
           "timeToPause": "00:02:30",
-          "units":" minutes"
+          "units":unitsSymbol 
         },
         {
+          "alertId":2,
           "id": "VOR",
-          "alert":true,
+          "alert":false,
           "userSelected":false,
           "navaId":"SLL",
           "distance": 320,
           "userDistance": 53,
           "estimatedPause":"01:33:12", 
           "timeToPause": "00:02:30",
-          "units":" minutes"
+          "units":unitsSymbol
         },
         {
+          "alertId":3,
           "id": "NDB",
           "alert":false,
           "userSelected":false,
@@ -65,9 +69,10 @@ export class NotificationPage implements OnInit {
           "userDistance": 23,
           "estimatedPause":"00:23:02", 
           "timeToPause": "00:02:30",
-          "units":" minutes"
+          "units":unitsSymbol
         },
         {
+          "alertId":4,
           "id": "Fix",
           "alert":false,
           "userSelected":false,
@@ -76,9 +81,10 @@ export class NotificationPage implements OnInit {
           "userDistance": 50,
           "estimatedPause":"02:30:02", 
           "timeToPause": "00:01:30",
-          "units":" minutes"
+          "units":unitsSymbol
         },
         {
+          "alertId":5,
           "id": "DME",
           "alert":false,
           "userSelected":false,
@@ -87,14 +93,14 @@ export class NotificationPage implements OnInit {
           "userDistance": 20,
           "estimatedPause":"01:10:58", 
           "timeToPause": "00:03:00",
-          "units":" minutes"
+          "units":unitsSymbol
         }
       ];
 
-      //this.getAll();
+      this.getAll();
       //this.initialStateAlert[1] = true;
 
-      /* this.platform.ready().then(() => {
+      this.platform.ready().then(() => {
         // Local Notifications Events
         // Events Supported: add, trigger, click, clear, cancel, update, clearall and cancelall
         this.localNotifications.on('click').subscribe(res => {
@@ -103,12 +109,11 @@ export class NotificationPage implements OnInit {
         this.localNotifications.on('trigger').subscribe(res => {
           let msg = res.data ? 'TRIGGER -> ' + res.data.mydata : 'TRIGGER -> Not Found mydata object';
         });
-      }); */
+      });
 
       this.subscription = this.xpWsSocket.messageStream().subscribe (
           json => {
             var json = JSON.parse(json);
-            console.log("json received");
             if ( json.airplane ) {
               this.alertLines[0].alert          = json.airplane.pauseforme.navaid.config.selected.airport;
               this.alertLines[0].userSelected   = json.airplane.pauseforme.navaid.config.selected.airport;
@@ -164,12 +169,12 @@ export class NotificationPage implements OnInit {
     let line = this.alertLines[index];
     let min  = line.timeToPause.split(":")[1];
     if ( parseInt(min) == 0 ) {
-      line.units = " seconds";
+      line.units = "sec";
     } else 
     if ( parseInt(min) == 1 ) {
-      line.units = " minute";
+      line.units = "min";
     } else {
-      line.units = " minutes";
+      line.units = "min";
     }
     
     // Remove the previous and create the new with the new values
@@ -179,27 +184,25 @@ export class NotificationPage implements OnInit {
   }
 
   createAlert(line) {
-    let msg = this.createMessageAlert(line);
-    console.log(msg);
-
+    let msg      = this.createMessageAlert(line);
     let totalSec = this.calculateTimeScheduleInSeconds(line);
-    console.log(totalSec);
+    console.log("Create alert for " + line.alertId + " -> " + msg);
 
-    /* this.localNotifications.schedule({
-        id: line.id,
+    this.localNotifications.schedule({
+        id: line.alertId,
         title: 'MapPauseForMe - Close to Pause!',
         //icon: 'http://climberindonesia.com/assets/icon/ionicons-2.0.1/png/512/android-chat.png',
         text: msg,
         data: { mydata: line },
         trigger: { in: totalSec, unit: ELocalNotificationTriggerUnit.SECOND },
         foreground: true // Show the notification while app is open
-    }); */
+    });
   }
 
   createMessageAlert(line) {
     return 'We are close... ' 
               + line.timeToPause.substr(3) + ' ' 
-              + line.units + ' and counting to Pause X-Plane, reason: ' 
+              + line.units + ' and counting to Pause X-Plane, reason estimated time reached: ' 
               + line.navaId + " " 
               + line.distance + "nm <= " 
               + line.userDistance + "nm";
@@ -212,7 +215,7 @@ export class NotificationPage implements OnInit {
     return totalSec;
   }
 
-  alertChanged(index) {
+  alertStateChanged(index) {
     let line        = this.alertLines[index];
     let stateBefore = this.initialStateAlert[index];
     let stateNow    = line.alert;
@@ -230,14 +233,18 @@ export class NotificationPage implements OnInit {
 
   getAll() {
     this.localNotifications.getAll().then((res: ILocalNotification[]) => {
+      console.log(res);
       this.scheduled = res;
     })
   }
 
   cancelAlert(line) {
-    console.log("Canceled Alert for " + line.id);
-    //this.localNotifications.cancel(line.id);
+    console.log("Canceled Alert for " + line.alertId);
+    this.localNotifications.cancel(line.alertId);
   }
   
+  onClick() {
+    this.getAll();
+  }
 
 }
