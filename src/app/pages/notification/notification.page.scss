@@ -45,7 +45,7 @@ ion-list-header.padding {
     display: none !important;
 }
 .rowDetailsVisible {
-    //display: block !important;
+    display: block !important;
 }
 
 ion-row.padding-bottom-middleline {
@@ -53,6 +53,10 @@ ion-row.padding-bottom-middleline {
 }
 ion-row.padding-bottom-lastline {
     padding-bottom: 12px;
+}
+ion-row.padding-bottom-firstline {
+    padding-bottom: 7px;
+    padding-top: 12px;
 }
 
 .labelValueCurrentNotification {

@@ -38,7 +38,7 @@
                           <ion-toggle [(ngModel)]="line.userSelected" (ionChange)="alertStateChanged(i)" disable="true"></ion-toggle>
                       </ion-col>
                     </ion-row>
-                    <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
+                    <ion-row class="vertical-align-content padding-bottom-firstline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                       <ion-col>
                           <i class="fas fa-check-circle" style="color:green;" [hidden]="!line.userSelected"></i><span [hidden]="!line.userSelected">&nbsp;</span>
                           <span class="labelValue">{{line.navaId}}</span>&nbsp;
@@ -54,56 +54,32 @@
                           <span class="labelValue">{{line.estimatedPause}}</span>&nbsp;
                       </ion-col>
                     </ion-row>
-                    <!-- <ion-row class="vertical-align-content padding-bottom-lastline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
+                    <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                       <ion-col>
-                        <span><i class="fas fa-bell"></i></span>&nbsp;
+                        <span><i class="fas fa-bell-slash"></i></span>&nbsp;
                         <span class="labelValueCurrentNotification">Alert</span>&nbsp;
                         <ion-datetime id="minSecPicker" 
                                       display-format="mm:ss" 
                                       [(ngModel)]="line.timeToPause" 
-                                      style="display: inline-flex; margin:-10px 0px 0px -10px;"
+                                      style="display: inline-flex; margin:-3px 0px 0px -10px;"
                                       [minuteValues]="minuteValues" 
                                       (ionChange)="minuteSecondChanged(i)"></ion-datetime>{{line.units}}
                         <span class="labelValueCurrentNotification">before</span>&nbsp;
-                        <ion-toggle [(ngModel)]="line.alert" (ionChange)="alertStateChanged(i)"></ion-toggle>
                       </ion-col>
-                    </ion-row> -->
-                    <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'"> 
-                        <ion-col style="display: inline-flex">
-                            <span  style="margin-top: 10px"><i class="fas fa-bell"></i></span>&nbsp;
-                            <span class="labelValueCurrentNotification"  style="margin-top: 10px">Alert</span>&nbsp;
-                            <ion-datetime id="minSecPicker" 
-                                      display-format="mm:ss" 
-                                      [(ngModel)]="line.timeToPause" 
-                                      style="display: inline-flex; margin:0px 0px 0px -6px;"
-                                      [minuteValues]="minuteValues" 
-                                      (ionChange)="minuteSecondChanged(i)"></ion-datetime>
-                            <span style="margin-top: 10px">{{line.units}}&nbsp;</span>
-                            <span class="labelValueCurrentNotification" style="margin-top: 10px">before</span>&nbsp;
-                        </ion-col>
-                        <!-- offset="4" -->
-                        <ion-col>
-                            <ion-toggle [(ngModel)]="line.userSelected" (ionChange)="alertStateChanged(i)" disable="true"></ion-toggle>
-                        </ion-col>
                     </ion-row>
-                    <ion-row class="vertical-align-content padding-bottom-lastline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'"> 
-                        <ion-col style="display: inline-flex">
-                            <span  style="margin-top: 10px"><i class="fas fa-bell-slash"></i></span>&nbsp;
-                            <span class="labelValueCurrentNotification"  style="margin-top: 10px">Alert</span>&nbsp;
-                            <ion-datetime id="minSecPicker" 
-                                      display-format="mm:ss" 
-                                      [(ngModel)]="line.timeToPause" 
-                                      style="display: inline-flex; margin:0px 0px 0px -6px;"
-                                      [minuteValues]="minuteValues" 
-                                      (ionChange)="minuteSecondChanged(i)"></ion-datetime>
-                            <span style="margin-top: 10px">nm&nbsp;</span>
-                            <span class="labelValueCurrentNotification" style="margin-top: 10px">before</span>&nbsp;
-                        </ion-col>
-                        <!-- offset="4" -->
+                    <ion-row class="vertical-align-content padding-bottom-lastline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                         <ion-col>
-                            <ion-toggle [(ngModel)]="line.userSelected" (ionChange)="alertStateChanged(i)" disable="true"></ion-toggle>
+                          <span><i class="fas fa-bell-slash"></i></span>&nbsp;
+                          <span class="labelValueCurrentNotification">Alert</span>&nbsp;
+                          <ion-datetime id="minSecPicker" 
+                                        display-format="mm:ss" 
+                                        [(ngModel)]="line.timeToPause" 
+                                        style="display: inline-flex; margin:-10px 0px 0px -10px;"
+                                        [minuteValues]="minuteValues" 
+                                        (ionChange)="minuteSecondChanged(i)"></ion-datetime>nm&nbsp;
+                          <span class="labelValueCurrentNotification">before</span>&nbsp;
                         </ion-col>
-                    </ion-row>
+                      </ion-row>
                   </ion-grid>
                 </ion-item>
 
