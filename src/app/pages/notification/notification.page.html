@@ -35,7 +35,7 @@
                           {{line.id}}
                       </ion-col>
                       <ion-col  offset="6">
-                          <ion-toggle [(ngModel)]="line.userSelected" (ionChange)="alertStateChanged(i)" disable="true"></ion-toggle>
+                          <ion-toggle [(ngModel)]="line.userSelected" disabled="true"></ion-toggle>
                       </ion-col>
                     </ion-row>
                     <ion-row class="vertical-align-content padding-bottom-firstline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
@@ -47,7 +47,7 @@
                           <span class="labelValue">{{line.userDistance}}nm</span>
                       </ion-col>
                     </ion-row>
-                    <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
+                    <ion-row class="vertical-align-content padding-bottom-middleline" style="padding-top: 5px;" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                       <ion-col>
                           <span><i class="fas fa-pause"></i></span>&nbsp;
                           <span class="labelValueCurrentNotification">Estimated</span>&nbsp;
@@ -56,12 +56,12 @@
                     </ion-row>
                     <ion-row class="vertical-align-content padding-bottom-middleline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                       <ion-col>
-                        <span><i class="fas fa-bell-slash"></i></span>&nbsp;
+                        <span id="{{'bellTimePause_' + i}}"><i class="fas fa-bell-slash"></i></span>&nbsp;
                         <span class="labelValueCurrentNotification">Alert</span>&nbsp;
                         <ion-datetime id="minSecPicker" 
                                       display-format="mm:ss" 
                                       [(ngModel)]="line.timeToPause" 
-                                      style="display: inline-flex; margin:-3px 0px 0px -10px;"
+                                      style="display: inline-flex; margin:-3px 0px 0px -10px;font-weight: bold"
                                       [minuteValues]="minuteValues" 
                                       (ionChange)="minuteSecondChanged(i)"></ion-datetime>{{line.units}}
                         <span class="labelValueCurrentNotification">before</span>&nbsp;
@@ -69,14 +69,9 @@
                     </ion-row>
                     <ion-row class="vertical-align-content padding-bottom-lastline" [ngClass]="!line.userSelected ? 'rowDetailsUnvisible' : 'rowDetailsVisible'">
                         <ion-col>
-                          <span><i class="fas fa-bell-slash"></i></span>&nbsp;
+                          <span id="{{'bellDistancePause_' + i}}"><i class="fas fa-bell-slash"></i></span>&nbsp;
                           <span class="labelValueCurrentNotification">Alert</span>&nbsp;
-                          <ion-datetime id="minSecPicker" 
-                                        display-format="mm:ss" 
-                                        [(ngModel)]="line.timeToPause" 
-                                        style="display: inline-flex; margin:-10px 0px 0px -10px;"
-                                        [minuteValues]="minuteValues" 
-                                        (ionChange)="minuteSecondChanged(i)"></ion-datetime>nm&nbsp;
+                          <span class="labelValueCurrent" (click)="openPicker(i)" style="margin:0px 20px 0px 18px;" >{{line.nmToPause | number:'2.0'}}</span>&nbsp;nm&nbsp;
                           <span class="labelValueCurrentNotification">before</span>&nbsp;
                         </ion-col>
                       </ion-row>
@@ -84,8 +79,7 @@
                 </ion-item>
 
                 <ion-item>
-                  <ion-button (click)="onClick()">FFFF</ion-button>
-
+                  <ion-button (click)="onClick()">List Notifications</ion-button>
                 </ion-item>
 
             </ion-item-group>
