@@ -20,6 +20,7 @@ export class NotificationPage implements OnInit {
   alertLines: any = [];
   initialStateAlert: any = [false,false,false,false,false]; 
   scheduled:any = [];
+  threadNotificationInterval;
   
   private subscription: Subscription;
 
@@ -106,9 +107,19 @@ export class NotificationPage implements OnInit {
         }
       ];
 
-      this.getAll();
+
+      
+      this.threadNotificationInterval = setInterval(() => {
+        this.getAll();
+        console.log(this.scheduled);
+        console.log(this.scheduled.length);
+        console.log(this.scheduled[0].data);
+        var jsonData = JSON.parse(this.scheduled[0].data);
+        console.log(jsonData.alertId);
+      }, 5000);
+      
       // Here should recreate all the alerts based on those that exists...  
-      console.log(this.scheduled);
+      
 
       this.platform.ready().then(() => {
         // Local Notifications Events
@@ -121,7 +132,7 @@ export class NotificationPage implements OnInit {
         });
       });
 
-      this.subscription = this.xpWsSocket.messageStream().subscribe (
+      this.subscription = this.xpWsSocket.messageStream().subscribe(
           json => {
             var json = JSON.parse(json);
             if ( json.airplane ) {
@@ -188,6 +199,7 @@ export class NotificationPage implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    clearInterval(this.threadNotificationInterval);
   }
 
   minuteSecondChanged(index) {
