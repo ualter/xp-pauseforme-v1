@@ -1,0 +1,40 @@
+{
+    "trigger":{
+       "type":"calendar",
+       "in":30,
+       "unit":"second"
+    },
+    "smallIcon":"res://icon",
+    "title":"MapPauseForMe - Close to Pause!",
+    "defaults":0,
+    "vibrate":false,
+    "foreground":true,
+    "showWhen":true,
+    "progressBar":{
+       "enabled":false,
+       "value":0
+    },
+    "lockscreen":true,
+    "launch":true,
+    "autoClear":true,
+    "priority":1,
+    "meta":{
+       "version":"0.9-beta.2",
+       "plugin":"cordova-plugin-local-notification"
+    },
+    "id":1,
+    "number":0,
+    "wakeup":true,
+    "attachments":[
+ 
+    ],
+    "silent":false,
+    "groupSummary":false,
+    "text":"We are close to the estimated time of 00:30 sec to pause X-Plane (LEBL 266nm <= 50nm)",
+    "actions":[
+ 
+    ],
+    "led":true,
+    "data":"{\"mydata\":{\"alertId\":1,\"id\":\"Airport\",\"alert\":false,\"userSelected\":true,\"navaId\":\"LEBL\",\"distance\":266,\"userDistance\":50,\"estimatedPause\":\"01:43:32\",\"timeToPause\":\"00:00:30\",\"units\":\"sec\",\"nmToPause\":0}}",
+    "sound":true
+ }
