@@ -53,7 +53,9 @@ export class NotificationPage implements OnInit {
           "estimatedPause":"01:43:32", 
           "timeToPause": "00:00:00",
           "units":unitsSymbol,
-          "nmToPause":0
+          "nmToPause":0,
+          "alertTimeSet":false,
+          "alertDistanceSet":false
         },
         {
           "alertTimeId":2,
@@ -67,7 +69,9 @@ export class NotificationPage implements OnInit {
           "estimatedPause":"01:33:12", 
           "timeToPause": "00:00:00",
           "units":unitsSymbol,
-          "nmToPause":0
+          "nmToPause":0,
+          "alertTimeSet":false,
+          "alertDistanceSet":false
         },
         {
           "alertTimeId":3,
@@ -81,7 +85,9 @@ export class NotificationPage implements OnInit {
           "estimatedPause":"00:23:02", 
           "timeToPause": "00:00:00",
           "units":unitsSymbol,
-          "nmToPause":0
+          "nmToPause":0,
+          "alertTimeSet":false,
+          "alertDistanceSet":false
         },
         {
           "alertTimeId":4,
@@ -95,7 +101,9 @@ export class NotificationPage implements OnInit {
           "estimatedPause":"02:30:02", 
           "timeToPause": "00:00:00",
           "units":unitsSymbol,
-          "nmToPause":0
+          "nmToPause":0,
+          "alertTimeSet":false,
+          "alertDistanceSet":false
         },
         {
           "alertTimeId":5,
@@ -109,7 +117,9 @@ export class NotificationPage implements OnInit {
           "estimatedPause":"01:10:58", 
           "timeToPause": "00:00:00",
           "units":unitsSymbol,
-          "nmToPause":0
+          "nmToPause":0,
+          "alertTimeSet":false,
+          "alertDistanceSet":false
         }
       ];
 
@@ -121,15 +131,23 @@ export class NotificationPage implements OnInit {
              var jsonData = JSON.parse(this.scheduled[i].data);
 
              for( let y = 1;y <= 5; y++ ) {
+
                 if ( jsonData.mydata.alertTimeId == y ) {
-                  this.alertLines[y-1].timeToPause = jsonData.mydata.timeToPause;
-                } else
-                if ( jsonData.mydata.alertTimeId == (y+10) ) {
-                  this.alertLines[y-1].nmToPause = jsonData.mydata.nmToPause;
+                  this.alertLines[y-1].timeToPause  = jsonData.mydata.timeToPause;
+                  this.alertLines[y-1].alertTimeSet = true;
+                } else {
+                  this.alertLines[y-1].alertTimeSet = false;
                 }
+
+                if ( jsonData.mydata.alertTimeId == (y+10) ) {
+                  this.alertLines[y-1].nmToPause        = jsonData.mydata.nmToPause;
+                  this.alertLines[y-1].alertDistanceSet = true;
+                } else {
+                  this.alertLines[y-1].alertDistanceSet = false;
+                }
+
                 console.log(jsonData.mydata.id + " " + jsonData.mydata.timeToPause + " " + jsonData.mydata.nmToPause);
              }
-             
           }
         } else {
           console.log("No notifications");
@@ -206,7 +224,7 @@ export class NotificationPage implements OnInit {
   }
 
   private checkTriggerDistanceAlertNotification(index) {
-    if (this.alertLines[index].nmToPause > 0) {
+    if (this.alertLines[index].nmToPause > 0 && !this.alertLines[index].alertDistanceSet ) {
       let currentDistance = this.alertLines[index].distance;
       let notificDistance = this.alertLines[index].nmToPause;
       if (currentDistance <= notificDistance) {
@@ -216,22 +234,29 @@ export class NotificationPage implements OnInit {
   }
 
   private checkTriggerTimeAlertNotification(index) {
-    if (this.alertLines[index].timeToPause != "00:00:00") {
+    if (this.alertLines[index].timeToPause != "00:00:00" && !this.alertLines[index].alertTimeSet ) {
         let currentTime      = this.alertLines[index].estimatedPause;
         let notificationTime = this.alertLines[index].timeToPause;
         let result           = this.compareAlerts(currentTime, notificationTime);
         if ( result == -1 || result == 0 ) {
-          this.createTimeAlert(index, this.alertLines[index],1);
+          this.createTimeAlert(index, this.alertLines[index], this.calculateAlertTime(this.alertLines[index].estimatedPause, this.alertLines[index].timeToPause) );
         }
     }
   }
 
   compareAlerts(t1, t2) {
-    var f = '01/01/2019 ';
-    if ( Date.parse(f + t1) > Date.parse(f + t1) ) return  1;
-    if ( Date.parse(f + t1) < Date.parse(f + t1) ) return -1;
+    let f = '01/01/2019 ';
+    if ( Date.parse(f + t1) > Date.parse(f + t2) ) return  1;
+    if ( Date.parse(f + t1) < Date.parse(f + t2) ) return -1;
     return 0;
   }
+
+  calculateAlertTime(estimatedTime, requestedPauseTime) {
+	  let f        = '01/01/2019 ';
+    let milisecs = Date.parse(f + estimatedTime) - Date.parse(f + requestedPauseTime);
+    return (milisecs / 1000);
+  }
+
 
   ngOnInit() {
   }
@@ -285,12 +310,14 @@ export class NotificationPage implements OnInit {
         trigger: { in: triggerInSeconds, unit: ELocalNotificationTriggerUnit.SECOND },
         foreground: true // Show the notification while app is open
     });
+    this.alertLines[index].alertTimeSet = true;
     this.changeBellStyle("bellTimePause_" + index,true);
   }
 
   cancelTimeAlert(index, line) {
     console.log("Canceled Time Alert for " + line.alertTimeId);
     this.localNotifications.cancel(line.alertTimeId);
+    this.alertLines[index].alertTimeSet = false;
     this.changeBellStyle("bellTimePause_" + index,false);
   }
 
@@ -389,6 +416,7 @@ export class NotificationPage implements OnInit {
         foreground: true // Show the notification while app is open
     });
 
+    this.alertLines[index].alertDistanceSet = true;
     this.changeBellStyle("bellDistancePause_" + index,true);
   }
 
@@ -396,6 +424,7 @@ export class NotificationPage implements OnInit {
     let idAlertDist = parseInt(line.alertDistanceId);
     console.log("Canceled Distance Alert for " + idAlertDist);
     this.localNotifications.cancel(idAlertDist);
+    this.alertLines[index].alertDistanceSet = false;
     this.changeBellStyle("bellDistancePause_" + index,false);
   }
 
