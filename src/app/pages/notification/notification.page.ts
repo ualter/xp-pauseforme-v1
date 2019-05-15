@@ -35,13 +35,15 @@ export class NotificationPage implements OnInit {
       for(let i = 0; i <= 100; i++) {
         this.optionsNm.push({text: '' + i,value: i});
       }
+
       if ( platform.is("iphone") ) {
       }
 
       let unitsSymbol = "min";
       this.alertLines = [
         {
-          "alertId":1,
+          "alertTimeId":1,
+          "alertDistanceId":11,
           "id": "Airport",
           "alert":false,
           "userSelected":true,
@@ -54,7 +56,8 @@ export class NotificationPage implements OnInit {
           "nmToPause":0
         },
         {
-          "alertId":2,
+          "alertTimeId":2,
+          "alertDistanceId":12,
           "id": "VOR",
           "alert":false,
           "userSelected":false,
@@ -67,7 +70,8 @@ export class NotificationPage implements OnInit {
           "nmToPause":0
         },
         {
-          "alertId":3,
+          "alertTimeId":3,
+          "alertDistanceId":13,
           "id": "NDB",
           "alert":false,
           "userSelected":true,
@@ -80,7 +84,8 @@ export class NotificationPage implements OnInit {
           "nmToPause":0
         },
         {
-          "alertId":4,
+          "alertTimeId":4,
+          "alertDistanceId":14,
           "id": "Fix",
           "alert":false,
           "userSelected":false,
@@ -93,7 +98,8 @@ export class NotificationPage implements OnInit {
           "nmToPause":0
         },
         {
-          "alertId":5,
+          "alertTimeId":5,
+          "alertDistanceId":15,
           "id": "DME",
           "alert":false,
           "userSelected":false,
@@ -107,20 +113,29 @@ export class NotificationPage implements OnInit {
         }
       ];
 
-
-      
+      // Collect all the Local Notifications and feed the array to show at the screen
       this.threadNotificationInterval = setInterval(() => {
         this.getAll();
-        console.log(this.scheduled);
-        console.log(this.scheduled.length);
-        console.log(this.scheduled[0].data);
-        var jsonData = JSON.parse(this.scheduled[0].data);
-        console.log(jsonData.alertId);
-      }, 5000);
-      
-      // Here should recreate all the alerts based on those that exists...  
-      
+        if ( this.scheduled.length > 0 ) {
+          for( let i = 0; i < this.scheduled.length; i++ ) {
+             var jsonData = JSON.parse(this.scheduled[i].data);
 
+             for( let y = 1;y <= 5; y++ ) {
+                if ( jsonData.mydata.alertTimeId == y ) {
+                  this.alertLines[y-1].timeToPause = jsonData.mydata.timeToPause;
+                } else
+                if ( jsonData.mydata.alertTimeId == (y+10) ) {
+                  this.alertLines[y-1].nmToPause = jsonData.mydata.nmToPause;
+                }
+                console.log(jsonData.mydata.id + " " + jsonData.mydata.timeToPause + " " + jsonData.mydata.nmToPause);
+             }
+             
+          }
+        } else {
+          console.log("No notifications");
+        }
+      }, 1000);
+      
       this.platform.ready().then(() => {
         // Local Notifications Events
         // Events Supported: add, trigger, click, clear, cancel, update, clearall and cancelall
@@ -142,7 +157,9 @@ export class NotificationPage implements OnInit {
               this.alertLines[0].distance       = json.airplane.pauseforme.navaid.config.distance.airport;
               this.alertLines[0].userDistance   = json.airplane.pauseforme.navaid.userAirportDistance;
               this.alertLines[0].estimatedPause = this.mapService.etaPauseByNavaIdAirport;
+              this.checkTriggerTimeAlertNotification(0);
               this.checkTriggerDistanceAlertNotification(0);
+              
 
               this.alertLines[1].alert          = json.airplane.pauseforme.navaid.config.selected.vor;
               this.alertLines[1].userSelected   = json.airplane.pauseforme.navaid.config.selected.vor;
@@ -150,6 +167,7 @@ export class NotificationPage implements OnInit {
               this.alertLines[1].distance       = json.airplane.pauseforme.navaid.config.distance.vor;
               this.alertLines[1].userDistance   = json.airplane.pauseforme.navaid.userVORDistance;
               this.alertLines[1].estimatedPause = this.mapService.etaPauseByNavaIdVor;
+              this.checkTriggerTimeAlertNotification(1);
               this.checkTriggerDistanceAlertNotification(1);
 
               this.alertLines[2].alert          = json.airplane.pauseforme.navaid.config.selected.ndb;
@@ -158,6 +176,7 @@ export class NotificationPage implements OnInit {
               this.alertLines[2].distance       = json.airplane.pauseforme.navaid.config.distance.ndb;
               this.alertLines[2].userDistance   = json.airplane.pauseforme.navaid.userNDBDistance;
               this.alertLines[2].estimatedPause = this.mapService.etaPauseByNavaIdNdb;
+              this.checkTriggerTimeAlertNotification(2);
               this.checkTriggerDistanceAlertNotification(2);
 
               this.alertLines[3].alert          = json.airplane.pauseforme.navaid.config.selected.fix;
@@ -166,6 +185,7 @@ export class NotificationPage implements OnInit {
               this.alertLines[3].distance       = json.airplane.pauseforme.navaid.config.distance.fix;
               this.alertLines[3].userDistance   = json.airplane.pauseforme.navaid.userFixDistance;
               this.alertLines[3].estimatedPause = this.mapService.etaPauseByNavaIdFix;
+              this.checkTriggerTimeAlertNotification(3);
               this.checkTriggerDistanceAlertNotification(3);
 
               this.alertLines[4].alert          = json.airplane.pauseforme.navaid.config.selected.dme;
@@ -174,6 +194,7 @@ export class NotificationPage implements OnInit {
               this.alertLines[4].distance       = json.airplane.pauseforme.navaid.config.distance.dme;
               this.alertLines[4].userDistance   = json.airplane.pauseforme.navaid.userDMEDistance;
               this.alertLines[4].estimatedPause = this.mapService.etaPauseByNavaIdDme;
+              this.checkTriggerTimeAlertNotification(4);
               this.checkTriggerDistanceAlertNotification(4);
             }
           },
@@ -192,6 +213,24 @@ export class NotificationPage implements OnInit {
         this.createDistanceAlert(index, this.alertLines[index]);
       }
     }
+  }
+
+  private checkTriggerTimeAlertNotification(index) {
+    if (this.alertLines[index].timeToPause != "00:00:00") {
+        let currentTime      = this.alertLines[index].estimatedPause;
+        let notificationTime = this.alertLines[index].timeToPause;
+        let result           = this.compareAlerts(currentTime, notificationTime);
+        if ( result == -1 || result == 0 ) {
+          this.createTimeAlert(index, this.alertLines[index],1);
+        }
+    }
+  }
+
+  compareAlerts(t1, t2) {
+    var f = '01/01/2019 ';
+    if ( Date.parse(f + t1) > Date.parse(f + t1) ) return  1;
+    if ( Date.parse(f + t1) < Date.parse(f + t1) ) return -1;
+    return 0;
   }
 
   ngOnInit() {
@@ -219,8 +258,9 @@ export class NotificationPage implements OnInit {
     this.cancelTimeAlert(index,line);
 
     if ( min > 0 || sec > 0 ) {
-      // Recreate the Alert (update)
-      this.createTimeAlert(index,line);
+      //let totalSec = this.calculateTimeScheduleInSeconds(line);
+      //this.createTimeAlert(index, line, totalSec);
+      this.changeBellStyle("bellTimePause_" + index,true);
     }
   }
 
@@ -232,27 +272,25 @@ export class NotificationPage implements OnInit {
               + line.userDistance + "nm)";
   }
 
-  createTimeAlert(index,line) {
-    let msg      = this.createTimeMessageAlert(line);
-    let totalSec = this.calculateTimeScheduleInSeconds(line);
-    console.log("Create Time Alert for " + line.alertId + " -> " + msg);
+  createTimeAlert(index,line, triggerInSeconds) {
+    let msg = this.createTimeMessageAlert(line);
+    console.log("Create Time Alert for " + line.alertTimeId + " -> " + msg);
 
     this.localNotifications.schedule({
-        id: line.alertId,
+        id: line.alertTimeId,
         title: 'MapPauseForMe - Close to Pause!',
-        //icon: 'http://climberindonesia.com/assets/icon/ionicons-2.0.1/png/512/android-chat.png',
+        icon: 'file://assets/imgs/airplanes/airbus/airplane-a320.png',
         text: msg,
         data: { mydata: line },
-        trigger: { in: totalSec, unit: ELocalNotificationTriggerUnit.SECOND },
+        trigger: { in: triggerInSeconds, unit: ELocalNotificationTriggerUnit.SECOND },
         foreground: true // Show the notification while app is open
     });
-
     this.changeBellStyle("bellTimePause_" + index,true);
   }
 
   cancelTimeAlert(index, line) {
-    console.log("Canceled Time Alert for " + line.alertId);
-    this.localNotifications.cancel(line.alertId);
+    console.log("Canceled Time Alert for " + line.alertTimeId);
+    this.localNotifications.cancel(line.alertTimeId);
     this.changeBellStyle("bellTimePause_" + index,false);
   }
 
@@ -281,7 +319,6 @@ export class NotificationPage implements OnInit {
 
   getAll() {
     this.localNotifications.getAll().then((res: ILocalNotification[]) => {
-      console.log(res);
       this.scheduled = res;
     })
   }
@@ -289,6 +326,11 @@ export class NotificationPage implements OnInit {
   onClick() {
     this.getAll();
   }
+  onClick2() {
+    this.createTimeAlert(0, this.alertLines[0],10);
+    this.alertLines[0].timeToPause = "00:00:10";
+  }
+  
 
   async openPicker(index) {
     const picker = await this.pickerCtrl.create({
@@ -333,13 +375,14 @@ export class NotificationPage implements OnInit {
 
   createDistanceAlert(index, line) {
     let msg         = this.createDistanceMessageAlert(line);
-    let idAlertDist = parseInt(line.alertId) + 10;
+    let idAlertDist = parseInt(line.alertDistanceId);
     console.log("Create Distance Alert for " + idAlertDist + " -> " + msg);
 
     this.localNotifications.schedule({
         id: idAlertDist,
         title: 'MapPauseForMe - Close to Pause!',
         //icon: 'http://climberindonesia.com/assets/icon/ionicons-2.0.1/png/512/android-chat.png',
+        icon: 'file://assets/imgs/airplanes/airbus/airplane-a320.png',
         text: msg,
         data: { mydata: line },
         trigger: { in: 1, unit: ELocalNotificationTriggerUnit.SECOND },
@@ -350,7 +393,7 @@ export class NotificationPage implements OnInit {
   }
 
   cancelDistanceAlert(index, line) {
-    let idAlertDist = parseInt(line.alertId) + 10;
+    let idAlertDist = parseInt(line.alertDistanceId);
     console.log("Canceled Distance Alert for " + idAlertDist);
     this.localNotifications.cancel(idAlertDist);
     this.changeBellStyle("bellDistancePause_" + index,false);
