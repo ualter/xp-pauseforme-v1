@@ -1,3 +1,5 @@
+import { Airliner } from './../../services/airplane.service';
+import { NotificationService } from './../../services/notification.service';
 import { MapService } from '../../services/map.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
@@ -175,6 +177,7 @@ export class MapPage implements OnInit {
     private platform: Platform,
     private backgroundMode: BackgroundMode,
     private mapService: MapService,
+    private notificationService: NotificationService,
     private screenOrientation: ScreenOrientation) {
 
       MapPage.me = this;
@@ -409,6 +412,7 @@ export class MapPage implements OnInit {
     lastAirplaneData = json.airplane; 
 
     this.flightPlanService.updateAirplaneData(lastAirplaneData);
+    this.notificationService.checkAlertNotification(json.airplane);
   }
   
   updateFlightPlan(flightPlan) {

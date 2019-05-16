@@ -12,5 +12,7 @@ export interface INotification {
     nmToPause: number;
     alertTimeSet: boolean;
     alertDistanceSet: boolean;
+    alertTimeSchedule: boolean;
+    alertDistanceSchedule: boolean;
 }
 

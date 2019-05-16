@@ -63,7 +63,7 @@
                                       [(ngModel)]="line.timeToPause" 
                                       style="display: inline-flex; margin:-3px 0px 0px -10px;font-weight: bold"
                                       [minuteValues]="minuteValues" 
-                                      (ionChange)="minuteSecondChanged(i)"></ion-datetime>{{line.units}}
+                                      (ionChange)="minuteSecondChanged(i)"></ion-datetime>&nbsp;{{line.units}}
                         <span class="labelValueCurrentNotification">before</span>&nbsp;
                       </ion-col>
                     </ion-row>
@@ -80,9 +80,6 @@
 
                 <ion-item>
                   <ion-button (click)="onClick()">List Notifications</ion-button>
-                </ion-item>
-                <ion-item>
-                  <ion-button (click)="onClick2()">Test notification</ion-button>
                 </ion-item>
 
             </ion-item-group>
