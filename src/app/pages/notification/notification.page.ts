@@ -5,7 +5,7 @@ import { XpWebSocketService } from 'src/app/services/xp-websocket.service';
 import { UtilsService } from '../../services/utils.service';
 import { MapService } from '../../services/map.service';
 import { Subscription } from 'rxjs';
-import { NotificationService } from '../../services/notification.service';
+import { NotificationService, AlertType } from '../../services/notification.service';
 import { notifications } from '../../services/notification';
 
 @Component({
@@ -151,23 +151,33 @@ export class NotificationPage implements OnInit {
         // Local Notifications Events
         // Events Supported: add, trigger, click, clear, cancel, update, clearall and cancelall
         this.localNotifications.on('click').subscribe(res => {
-            let msg = res.data ? 'CLICK -> ' + res.data.mydata : 'CLICK -> Not Found mydata object';
-            console.log(msg);
+            console.log("CLICK");
             console.log(res.data);
-            console.log("Mydata==> " + res.data.mydata.alertTimeId + ", " + res.data.mydata.id);
+
+            let dataMsg = res.data.mydata;
+            if ( dataMsg.typeAlert == AlertType.TIME ) {
+              this.alertLines[dataMsg.index].timeToPause = "00:00:00";
+              this.cancelTimeAlert(dataMsg.id, dataMsg.index);
+            } else
+            if ( dataMsg.typeAlert == AlertType.DISTANCE ) {
+              this.alertLines[dataMsg.index].nmToPause = 0;
+              this.cancelDistanceAlert(dataMsg.id, dataMsg.index);
+            }
         });
         this.localNotifications.on('trigger').subscribe(res => {
-            let msg = res.data ? 'TRIGGER -> ' + res.data.mydata : 'TRIGGER -> Not Found mydata object';
-            console.log(msg);
+            console.log("TRIGGER");
             console.log(res.data);
-            console.log("Mydata==> " + res.data.mydata.alertTimeId + ", " + res.data.mydata.id);
 
-            if ( res.data.mydata.alertTimeId > 0 ) {
-              this.cancelTimeAlert(res.data.mydata.index,res.data.mydata);
+            let dataMsg = res.data.mydata;
+            if ( dataMsg.typeAlert == AlertType.TIME ) {
+              this.alertLines[dataMsg.index].timeToPause = "00:00:00";
+              this.cancelTimeAlert(dataMsg.id, dataMsg.index);
             } else
-            if ( res.data.mydata.alertDistanceId )  {
-              this.cancelDistanceAlert(res.data.mydata.index,res.data.mydata);
+            if ( dataMsg.typeAlert == AlertType.DISTANCE ) {
+              this.alertLines[dataMsg.index].nmToPause = 0;
+              this.cancelDistanceAlert(dataMsg.id, dataMsg.index);
             }
+
         });
       });
 
@@ -213,6 +223,31 @@ export class NotificationPage implements OnInit {
 
   }
 
+  private cancelDistanceAlert(id, index) {
+    let idAlertDist = parseInt(id);
+    console.log("Canceled Distance Alert for " + idAlertDist);
+    this.localNotifications.cancel(idAlertDist);
+    this.alertLines[index].alertDistanceSet                      = false;
+    this.alertLines[index].alertDistanceSchedule                 = false;
+    this.notifications.notification[index].nmToPause             = 0;
+    this.notifications.notification[index].alertDistanceSet      = false;
+    this.notifications.notification[index].alertDistanceSchedule = false;
+    this.notificationService.saveNotifications();
+    this.changeBellStyle("bellDistancePause_" + index, false);
+  }
+
+  private cancelTimeAlert(id, index) {
+    console.log("Canceled Time Alert for " + id);
+    this.localNotifications.cancel(id);
+    this.alertLines[index].alertTimeSet                      = false;
+    this.alertLines[index].alertTimeSchedule                 = false;
+    this.notifications.notification[index].timeToPause       = "00:00:00";
+    this.notifications.notification[index].alertTimeSet      = false;
+    this.notifications.notification[index].alertTimeSchedule = false;
+    this.notificationService.saveNotifications();
+    this.changeBellStyle("bellTimePause_" + index, false);
+  }
+
   ngAfterViewInit() {  
     for(let i = 0; i < 5; i++) {
       if ( this.alertLines[i].alertTimeSchedule ) {
@@ -254,27 +289,14 @@ export class NotificationPage implements OnInit {
     line.units = this.defineUnits(line.timeToPause);
     
     // Remove the previous and create the new with the new values
-    this.cancelTimeAlert(index,line);
+    this.cancelTimeAlert(line.alertTimeId,index);
 
     if ( min > 0 || sec > 0 ) {
       this.changeBellStyle("bellTimePause_" + index,true);
-      this.notifications.notification[index].timeToPause  = this.alertLines[index].timeToPause;
+      this.notifications.notification[index].timeToPause       = this.alertLines[index].timeToPause;
       this.notifications.notification[index].alertTimeSchedule = true;
       this.notificationService.saveNotifications();
     }
-  }
-
-  cancelTimeAlert(index, line) {
-    console.log("Canceled Time Alert for " + line.alertTimeId);
-    this.localNotifications.cancel(line.alertTimeId);
-    this.alertLines[index].alertTimeSet      = false;
-    this.alertLines[index].alertTimeSchedule = false;
-    this.changeBellStyle("bellTimePause_" + index,false);
-
-    this.notifications.notification[index].timeToPause       = "00:00:00";
-    this.notifications.notification[index].alertTimeSet      = false;
-    this.notifications.notification[index].alertTimeSchedule = false;
-    this.notificationService.saveNotifications();
   }
 
   calculateTimeScheduleInSeconds(line) {
@@ -318,11 +340,11 @@ export class NotificationPage implements OnInit {
 
     // Clear the Alert
     if ( parseInt(newValue) == 0 && parseInt(oldValue) > 0 ) {
-      this.cancelDistanceAlert(index, this.alertLines[index]);
+      this.cancelDistanceAlert(this.alertLines[index].alertDistanceId, index);
     } else
     // Change the alert / Erase the Previous and Let the new one be created when receive data from X-Plane and detect the target distance notification
     if ( parseInt(newValue) > 0 && (parseInt(newValue) != parseInt(oldValue)) ) {
-      this.cancelDistanceAlert(index, this.alertLines[index]);
+      this.cancelDistanceAlert(this.alertLines[index].alertDistanceId, index);
       this.changeBellStyle("bellDistancePause_" + index,true); // Turn the "future" local notification ON
       // Save the configuration
       this.notifications.notification[index].nmToPause             = this.alertLines[index].nmToPause;
@@ -337,20 +359,6 @@ export class NotificationPage implements OnInit {
               + line.navaId + " (" 
               + line.distance + "nm <= " 
               + line.userDistance + "nm)";
-  }
-
-  cancelDistanceAlert(index, line) {
-    let idAlertDist = parseInt(line.alertDistanceId);
-    console.log("Canceled Distance Alert for " + idAlertDist);
-    this.localNotifications.cancel(idAlertDist);
-    this.alertLines[index].alertDistanceSet      = false;
-    this.alertLines[index].alertDistanceSchedule = false;
-    this.changeBellStyle("bellDistancePause_" + index,false);
-
-    this.notifications.notification[index].nmToPause             = 0;
-    this.notifications.notification[index].alertDistanceSet      = false;
-    this.notifications.notification[index].alertDistanceSchedule = false;
-    this.notificationService.saveNotifications();
   }
 
   changeBellStyle(idElement:string, stateOn:boolean) {
