@@ -56,7 +56,9 @@ export class NotificationPage implements OnInit {
           "alertTimeSet":false,
           "alertDistanceSet":false,
           "alertTimeSchedule":false,
-          "alertDistanceSchedule":false
+          "alertDistanceSchedule":false,
+          "alertTimeTriggered":false,
+          "alertDistanceTriggered":false
         },
         {
           "index":1,
@@ -74,7 +76,9 @@ export class NotificationPage implements OnInit {
           "alertTimeSet":false,
           "alertDistanceSet":false,
           "alertTimeSchedule":false,
-          "alertDistanceSchedule":false
+          "alertDistanceSchedule":false,
+          "alertTimeTriggered":false,
+          "alertDistanceTriggered":false
         },
         {
           "index":2,
@@ -92,7 +96,9 @@ export class NotificationPage implements OnInit {
           "alertTimeSet":false,
           "alertDistanceSet":false,
           "alertTimeSchedule":false,
-          "alertDistanceSchedule":false
+          "alertDistanceSchedule":false,
+          "alertTimeTriggered":false,
+          "alertDistanceTriggered":false
         },
         {
           "index":3,
@@ -110,7 +116,9 @@ export class NotificationPage implements OnInit {
           "alertTimeSet":false,
           "alertDistanceSet":false,
           "alertTimeSchedule":false,
-          "alertDistanceSchedule":false
+          "alertDistanceSchedule":false,
+          "alertTimeTriggered":false,
+          "alertDistanceTriggered":false
         },
         {
           "index":4,
@@ -128,23 +136,27 @@ export class NotificationPage implements OnInit {
           "alertTimeSet":false,
           "alertDistanceSet":false,
           "alertTimeSchedule":false,
-          "alertDistanceSchedule":false
+          "alertDistanceSchedule":false,
+          "alertTimeTriggered":false,
+          "alertDistanceTriggered":false
         }
       ];
 
       // Load the persitent configuration notifications (For exemple: Alarm must be set or not)
       this.notifications = this.notificationService.getNotifications();
       for(let i = 0; i < 5; i++) {
-        this.alertLines[i].alertTimeId           = this.notifications.notification[i].alertTimeId;
-        this.alertLines[i].alertDistanceId       = this.notifications.notification[i].alertDistanceId;
-        this.alertLines[i].id                    = this.notifications.notification[i].id;
-        this.alertLines[i].timeToPause           = this.notifications.notification[i].timeToPause;
-        this.alertLines[i].nmToPause             = this.notifications.notification[i].nmToPause;
-        this.alertLines[i].alertTimeSet          = this.notifications.notification[i].alertTimeSet;
-        this.alertLines[i].alertDistanceSet      = this.notifications.notification[i].alertDistanceSet;          
-        this.alertLines[i].alertTimeSchedule     = this.notifications.notification[i].alertTimeSchedule;
-        this.alertLines[i].alertDistanceSchedule = this.notifications.notification[i].alertDistanceSchedule;          
-        this.alertLines[i].units                 = this.defineUnits(this.notifications.notification[i].timeToPause);
+        this.alertLines[i].alertTimeId            = this.notifications.notification[i].alertTimeId;
+        this.alertLines[i].alertDistanceId        = this.notifications.notification[i].alertDistanceId;
+        this.alertLines[i].id                     = this.notifications.notification[i].id;
+        this.alertLines[i].timeToPause            = this.notifications.notification[i].timeToPause;
+        this.alertLines[i].nmToPause              = this.notifications.notification[i].nmToPause;
+        this.alertLines[i].alertTimeSet           = this.notifications.notification[i].alertTimeSet;
+        this.alertLines[i].alertDistanceSet       = this.notifications.notification[i].alertDistanceSet;          
+        this.alertLines[i].alertTimeSchedule      = this.notifications.notification[i].alertTimeSchedule;
+        this.alertLines[i].alertDistanceSchedule  = this.notifications.notification[i].alertDistanceSchedule;          
+        this.alertLines[i].alertTimeTriggered     = this.notifications.notification[i].alertTimeTriggered;
+        this.alertLines[i].alertDistanceTriggered = this.notifications.notification[i].alertDistanceTriggered;          
+        this.alertLines[i].units                  = this.defineUnits(this.notifications.notification[i].timeToPause);
       }
       
       this.platform.ready().then(() => {
@@ -170,14 +182,16 @@ export class NotificationPage implements OnInit {
 
             let dataMsg = res.data.mydata;
             if ( dataMsg.typeAlert == AlertType.TIME ) {
-              this.alertLines[dataMsg.index].timeToPause = "00:00:00";
-              this.cancelTimeAlert(dataMsg.id, dataMsg.index);
+              this.alertLines[dataMsg.index].alertTimeTriggered                  = true;
+              this.notifications.notification[dataMsg.index].alertTimeTriggered  = true;
+              this.changeBellStyleToTriggeredState("bellTimePause_" + dataMsg.index);
             } else
             if ( dataMsg.typeAlert == AlertType.DISTANCE ) {
-              this.alertLines[dataMsg.index].nmToPause = 0;
-              this.cancelDistanceAlert(dataMsg.id, dataMsg.index);
+              this.alertLines[dataMsg.index].alertDistanceTriggered                 = true;
+              this.notifications.notification[dataMsg.index].alertDistanceTriggered = true;
+              this.changeBellStyleToTriggeredState("bellDistancePause_" + dataMsg.index);
             }
-
+            this.notificationService.saveNotifications();
         });
       });
 
@@ -227,11 +241,12 @@ export class NotificationPage implements OnInit {
     let idAlertDist = parseInt(id);
     console.log("Canceled Distance Alert for " + idAlertDist);
     this.localNotifications.cancel(idAlertDist);
-    this.alertLines[index].alertDistanceSet                      = false;
-    this.alertLines[index].alertDistanceSchedule                 = false;
-    this.notifications.notification[index].nmToPause             = 0;
-    this.notifications.notification[index].alertDistanceSet      = false;
-    this.notifications.notification[index].alertDistanceSchedule = false;
+    this.alertLines[index].alertDistanceSet                       = false;
+    this.alertLines[index].alertDistanceSchedule                  = false;
+    this.notifications.notification[index].nmToPause              = 0;
+    this.notifications.notification[index].alertDistanceSet       = false;
+    this.notifications.notification[index].alertDistanceSchedule  = false;
+    this.notifications.notification[index].alertDistanceTriggered = false;
     this.notificationService.saveNotifications();
     this.changeBellStyle("bellDistancePause_" + index, false);
   }
@@ -239,11 +254,12 @@ export class NotificationPage implements OnInit {
   private cancelTimeAlert(id, index) {
     console.log("Canceled Time Alert for " + id);
     this.localNotifications.cancel(id);
-    this.alertLines[index].alertTimeSet                      = false;
-    this.alertLines[index].alertTimeSchedule                 = false;
-    this.notifications.notification[index].timeToPause       = "00:00:00";
-    this.notifications.notification[index].alertTimeSet      = false;
-    this.notifications.notification[index].alertTimeSchedule = false;
+    this.alertLines[index].alertTimeSet                       = false;
+    this.alertLines[index].alertTimeSchedule                  = false;
+    this.notifications.notification[index].timeToPause        = "00:00:00";
+    this.notifications.notification[index].alertTimeSet       = false;
+    this.notifications.notification[index].alertTimeSchedule  = false;
+    this.notifications.notification[index].alertTimeTriggered = false;
     this.notificationService.saveNotifications();
     this.changeBellStyle("bellTimePause_" + index, false);
   }
@@ -253,9 +269,15 @@ export class NotificationPage implements OnInit {
       if ( this.alertLines[i].alertTimeSchedule ) {
         this.changeBellStyle("bellTimePause_" + i,true);
       }
-
       if ( this.alertLines[i].alertDistanceSchedule ) {
         this.changeBellStyle("bellDistancePause_" + i,true);
+      }
+
+      if ( this.alertLines[i].alertTimeTriggered ) {
+        this.changeBellStyleToTriggeredState("bellTimePause_" + i);
+      }
+      if ( this.alertLines[i].alertDistanceTriggered ) {
+        this.changeBellStyleToTriggeredState("bellDistancePause_" + i);
       }
     }
   }
@@ -370,5 +392,11 @@ export class NotificationPage implements OnInit {
       bellElement.setAttribute("class","fas fa-bell-slash");
       bellElement.setAttribute("style","color:black;");
     }
+  }
+
+  changeBellStyleToTriggeredState(idElement:string) {
+    var bellElement = document.getElementById(idElement).firstElementChild;
+    bellElement.setAttribute("class","fas fa-bell");
+    bellElement.setAttribute("style","color:lightgray;");
   }
 }

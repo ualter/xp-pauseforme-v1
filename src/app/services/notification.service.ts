@@ -54,7 +54,9 @@ export class NotificationService {
         "alertTimeSet":false,
         "alertDistanceSet":false,
         "alertTimeSchedule": false,
-        "alertDistanceSchedule": false
+        "alertDistanceSchedule": false,
+        "alertTimeTriggered": false,
+        "alertDistanceTriggered": false
       },
       {
         "index":NotificationIndex.VOR,
@@ -66,7 +68,9 @@ export class NotificationService {
         "alertTimeSet":false,
         "alertDistanceSet":false,
         "alertTimeSchedule": false,
-        "alertDistanceSchedule": false
+        "alertDistanceSchedule": false,
+        "alertTimeTriggered": false,
+        "alertDistanceTriggered": false
       },
       {
         "index":NotificationIndex.NDB,
@@ -78,7 +82,9 @@ export class NotificationService {
         "alertTimeSet":false,
         "alertDistanceSet":false,
         "alertTimeSchedule": false,
-        "alertDistanceSchedule": false
+        "alertDistanceSchedule": false,
+        "alertTimeTriggered": false,
+        "alertDistanceTriggered": false
       },
       {
         "index":NotificationIndex.FIX,
@@ -90,7 +96,9 @@ export class NotificationService {
         "alertTimeSet":false,
         "alertDistanceSet":false,
         "alertTimeSchedule": false,
-        "alertDistanceSchedule": false
+        "alertDistanceSchedule": false,
+        "alertTimeTriggered": false,
+        "alertDistanceTriggered": false
       },
       {
         "index":NotificationIndex.DME,
@@ -102,7 +110,9 @@ export class NotificationService {
         "alertTimeSet":false,
         "alertDistanceSet":false,
         "alertTimeSchedule": false,
-        "alertDistanceSchedule": false
+        "alertDistanceSchedule": false,
+        "alertTimeTriggered": false,
+        "alertDistanceTriggered": false
       }
     ];
 
