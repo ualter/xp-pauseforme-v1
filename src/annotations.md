@@ -25,6 +25,11 @@ $ ionic cordova plugin add cordova-plugin-screen-orientation
 $ npm install @ionic-native/screen-orientation
 $ ionic cordova plugin add cordova-plugin-insomnia
 $ npm install @ionic-native/insomnia
+## In case using the AdMob Google Advertising (https://apps.admob.com)
+## This next is only necessary if the App will be the Banner Advertising (This is for Android - more here: https://github.com/ratson/cordova-plugin-admob-free#installation)
+$ ionic cordova plugin add cordova-plugin-admob-free --variable ADMOB_APP_ID=ca-app-pub-1076248928913696~3679435222
+## In case using the AdMob Google Advertising
+$ npm install @ionic-native/admob-free
 ```
 #### Development Server
 ```shell

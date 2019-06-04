@@ -16,6 +16,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
+import { AdMobFree } from '@ionic-native/admob-free/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +36,8 @@ import { Insomnia } from '@ionic-native/insomnia/ngx';
     LocalNotifications,
     BackgroundMode,
     ScreenOrientation,
-    Insomnia
+    Insomnia,
+    AdMobFree
   ],
   bootstrap: [AppComponent]
 })

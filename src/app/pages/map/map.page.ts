@@ -1,3 +1,5 @@
+// Android: ca-app-pub-1076248928913696~3679435222   /   ca-app-pub-1076248928913696/4410240570
+
 import { Airliner } from './../../services/airplane.service';
 import { NotificationService } from './../../services/notification.service';
 import { MapService } from '../../services/map.service';
@@ -16,6 +18,7 @@ import { FlightPlanService } from '../../services/flight-plan.service';
 import { AirplaneService, AirplaneCategorySize } from '../../services/airplane.service';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free/ngx';
 
 const MAX_ZOOM          = 15;
 const ZOOM_PAN_OPTIONS  = {animate: true, duration: 0.25, easeLinearity: 1.0, noMoveStart: false}; 
@@ -102,6 +105,12 @@ var AIRPLANE_ICON = leaflet.icon({
   popupAnchor:  [0, (AIRPLANE_ICON_HEIGHT/2) * -1]                              // point from which the popup should open relative to the iconAnchor
 });
 
+const bannerConfig: AdMobFreeBannerConfig = {
+  // add your config here
+  // for the sake of this example we will just use the test config
+  isTesting: true,
+  autoShow: true
+};
 
 @Component({
   selector: 'app-map',
@@ -178,9 +187,12 @@ export class MapPage implements OnInit {
     private backgroundMode: BackgroundMode,
     private mapService: MapService,
     private notificationService: NotificationService,
-    private screenOrientation: ScreenOrientation) {
+    private screenOrientation: ScreenOrientation,
+    private admobFree: AdMobFree) {
 
       MapPage.me = this;
+
+      this.admobFree.banner.config(bannerConfig);
 
       this.dataService.currentSettings.subscribe(settings => {
         this.xplaneAddress = settings.xplaneAddress;
@@ -229,6 +241,12 @@ export class MapPage implements OnInit {
           document.addEventListener("pause", this.onPause, false);
           document.addEventListener("resume", this.onResume, false);
       });
+
+      this.admobFree.banner.prepare().then(() => {
+        // banner Ad is ready
+        // if we set autoShow to false, then we will need to call the show method here
+      })
+      .catch(e => console.log(e));
   }
 
   // Enter on Background Mode
