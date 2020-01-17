@@ -20,7 +20,9 @@
     "@angular/http": "^7.2.2",
     "@angular/platform-browser": "^7.2.2",
     "@angular/platform-browser-dynamic": "^7.2.2",
+    "@angular/pwa": "^0.12.4",
     "@angular/router": "^7.2.2",
+    "@angular/service-worker": "^7.2.2",
     "@ionic-native/background-mode": "^5.5.1",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/geolocation": "^5.4.0",
@@ -47,6 +49,7 @@
     "jquery": "^3.4.0",
     "leaflet-easybutton": "^2.4.0",
     "leaflet-touch-helper": "^2.0.0",
+    "node-sass": "^4.13.1",
     "rxjs": "~6.3.3",
     "zone.js": "~0.8.29"
   },

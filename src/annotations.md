@@ -1,4 +1,4 @@
-# Only Annotations
+# Quick Reference
 #### Steps new workspace Ionic Project (basically)
 ```shell
 $ npm i -g cordova ionic
@@ -30,8 +30,9 @@ $ npm install @ionic-native/insomnia
 ```shell
 $ ionic serve -c ## Print app console logs to Ionic CLI
 $ ionic serve -l ## Test your apps on multiple platform types in the browser
-$ ionic serve --prod ## Build the application for production
-$ ionic serve --devapp ## Get available for devapp conection
+$ ionic serve ## Spin up the development server (localhost)
+$ ionic serve --external ## Spin up the development server on your LAN
+$ ionic serve --lab ## Spin up the development server, all platforms at once
 $ ionic serve --help ## See all available options
 ```
 ---
@@ -143,5 +144,24 @@ Trying to get running the DevApp iOS App at iPhone/iPad
 $ ionic cordova prepare
 $ ionic serve --devapp
 ```
+
+------
+
+
+
+## Docker
+
+```shell
+# Build Docker Image
+$ docker build -t xp-pauseforme .
+
+# Launch Docker Container
+$ docker run --name xp-pauseforme -p 80:80 -d xp-pauseforme
+```
+
+
+
+
+
 ---
 #### Ualter Jr.
