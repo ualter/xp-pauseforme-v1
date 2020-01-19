@@ -5,7 +5,10 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ionic serve --consolelogs --browser=chrome --external",
+    "start-port-9393": "ionic serve --consolelogs --browser=chrome --external --port=9393",
+    "start-firefox": "ionic serve --consolelogs --browser=firefox --external",
+    "start-prod": "ionic serve --consolelogs --browser=chrome --external --prod",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

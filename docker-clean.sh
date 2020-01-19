@@ -1,2 +1,2 @@
-docker rm -f $(docker ps --filter name=xp-pause4me --format {{.ID}})
-docker rmi -f xp-pause4me
+docker rm -f $(docker ps --filter name=xpp4m --format {{.ID}})
+docker rmi -f xpp4m

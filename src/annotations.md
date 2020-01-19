@@ -28,6 +28,10 @@ $ npm install @ionic-native/insomnia
 ```
 #### Development Server
 ```shell
+$ npm run start
+$ npm run start-port-9393
+$ npm run start-firefox
+$ npm run start-prod
 $ ionic serve -c ## Print app console logs to Ionic CLI
 $ ionic serve -l ## Test your apps on multiple platform types in the browser
 $ ionic serve ## Spin up the development server (localhost)

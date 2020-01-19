@@ -1,2 +1,2 @@
-docker build -t xp-pause4me .
-docker run --name xp-pause4me -p 80:80 -d xp-pause4me
+docker build -t xpp4m .
+docker run --name xpp4m -p 80:80 -d xpp4m
