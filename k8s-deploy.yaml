@@ -1,0 +1,27 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: xpp4m
+  namespace: default
+  labels:
+    app: xpp4m
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xpp4m
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 30%    
+  template:
+    metadata:
+      labels:
+        app: xpp4m
+    spec:
+      containers:
+      - image: ualter/xpp4m
+        name: xpp4m
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always   
